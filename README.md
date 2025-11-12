@@ -1,5 +1,7 @@
 # Panko Backend
 
+[Problem Framing](problem-framing.md)
+
 ## File Structure
 
 - `/context` contains files modified by the Context tool. DO NOT TOUCH.
