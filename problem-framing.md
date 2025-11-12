@@ -61,27 +61,29 @@ As a result, users lose valuable information about their cooking progress, forge
 ### **Stakeholders**
 **Insight 1 Direct Stakeholders**
 **Observation:** Our primary direct stakeholders include home cooks and meal planners.
+\
 **Design Response** Users who plan meals often want to track the nutrition facts of their meals. As part of the food diary, we will include a feature where users will be able to log the nutrition of each of their meals and view their daily/weekly nutrition. Recipes can include nutrition facts as well.
 
 ### **Time**
 **Insight 2 Accumulation of Recipes Over Time**
-**Observation:** After years of use, users will accumulate a lot of recipes, leading to a large personal library to choose from when planning meals. However, with the number of accumulated recipes, users could feel overwhelmed by the amount of choices or struggle to find certain recipes.
+**Observation:** After years of use, users will accumulate a lot of recipes, leading to a large personal library to choose from when planning meals. However, with the number of accumulated recipes, users could feel overwhelmed by the amount of choices or struggle to find certain recipes.\
 **Design Response:** We will include a search and filtering system for users’ recipes. Users will be able to add tags to recipes and use these tags to filter and search for certain recipes.
 
 **Insight 3 Adaptation (Lifestyle Changes)**
 **Observation:** Users are able to save recipes and assign certain recipes for certain dates. The app’s meal tracking and planning features support a lifestyle change towards having more organized, home-cooked meals. In order to make these recipes, users have to go into each recipe and view the ingredients list. With users potentially planning three meals a day, this would be tedious
+\
 **Design Response:** We will introduce a shopping list feature that lets users add recipes to their shopping list. The ingredients across the recipes will aggregate into one list.
 
 ### **Values**
 **Insight 4 Privacy vs Social Sharing Tension**
-**Observation** Users may want to share some recipes and keep others private.
-**Design Response** We will have a friendship system that lets users see others' activity and recipes. The app will also allow users to adjust the visibility settings of each recipe and meal (eg. public, private, visible to friends only)
+**Observation** Users may want to share some recipes and keep others private.\
+ **Design Response** We will have a friendship system that lets users see others' activity and recipes. The app will also allow users to adjust the visibility settings of each recipe and meal (eg. public, private, visible to friends only)
 
 **Insight 5: Environmental Sustainability**
-**Observation:** The ingredient tracker and meal planner can support environmental sustainability by helping users track what ingredients they need to purchase for each of their meals, reducing food waste. However, this app could also encourage users to constantly cook new, trendy recipes leading to more food waste.
+**Observation:** The ingredient tracker and meal planner can support environmental sustainability by helping users track what ingredients they need to purchase for each of their meals, reducing food waste. However, this app could also encourage users to constantly cook new, trendy recipes leading to more food waste.\
 **Design Response:** We will have a meal planner and ingredient tracker/shopping list feature that allows users to assign recipes for a certain date and it automatically adds the ingredients the users need to buy to make those recipes. In order to encourage users to not waste ingredients, our search feature will allow users to search for recipes by ingredients.
 
 ### **Pervasiveness**
-**Insight 6: Accounting for Culture**
-**Observation:** A positive effect of the app's recipe sharing in one culture might be the celebration of regional cuisine. However, in another culture with strong traditions of oral recipe transmission or secret family dishes, this feature could be seen as a breakdown, devaluing culinary heritage and commodifying culturally significant knowledge.
+**Insight 6: Accounting for Culture**\
+**Observation:** A positive effect of the app's recipe sharing in one culture might be the celebration of regional cuisine. However, in another culture with strong traditions of oral recipe transmission or secret family dishes, this feature could be seen as a breakdown, devaluing culinary heritage and commodifying culturally significant knowledge.\
 **Design Response:** For recipes, users can label the type of cuisine for other users to more easily find. Additionally, Implement sharing controls. Allow users to mark recipes as private, shared with friends, or public.
