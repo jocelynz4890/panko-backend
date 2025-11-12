@@ -13,6 +13,7 @@
 - `/src` contains source code
   - `/concepts` contains concepts, each with a `.ts` and `.test.ts` file
   - `/syncs` contains syncs
+- `mentor-meetings` contains files with deliverables for each mentor meeting
 - `design.md` detailing the overall design
 - `team-contract.md` contains the team's contract
 - `problem-framing.md` contains the problem framing assignment responses
