@@ -85,5 +85,5 @@ As a result, users lose valuable information about their cooking progress, forge
 
 ### **Pervasiveness**
 **Insight 6: Accounting for Culture**\
-**Observation:** A positive effect of the app's recipe sharing in one culture might be the celebration of regional cuisine. However, in another culture with strong traditions of oral recipe transmission or secret family dishes, this feature could be seen as a breakdown, devaluing culinary heritage and commodifying culturally significant knowledge.\
+**Observation:** A positive effect of the app's recipe sharing in one culture might be the celebration of certain cuisine. However, in some cultures with things like secret family recipes, this feature could be seen as a breakdown, devaluing culinary heritage.\
 **Design Response:** For recipes, users can label the type of cuisine for other users to more easily find. Additionally, Implement sharing controls. Allow users to mark recipes as private, shared with friends, or public.
