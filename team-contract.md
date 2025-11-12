@@ -1,0 +1,35 @@
+**Team Food Contract**
+
+- The expected level of achievement and effort for each team member (what grades do you expect to get? how much time do you plan to put in?);
+  - Functional app by the deadline
+  - Paul:
+    - I expect to get a 90 or above overall on the project.
+    - I plan to put in at least 10 hours per week working on the project.
+  - Jocelyn:
+    - I expect to get an A on this project.
+    - I will put in at least 10 hours per week.
+  - Vy:
+    - I expect to get at least 90% for each assignment in this project
+    - I will put in at least 10 hours per week.
+- Personal goals for each team member (building a great app? learning a particular skill?);
+  - Paul:
+    - I want to learn more about software design and build an app that I would actually use.
+  - Jocelyn:
+    - I want to create a functioning app to put on my portfolio that I would personally use
+  - Vy:
+    - I want to build a useful app that I can personally use in my day-to-day life.
+- Frequency, length and location of team meetings;
+  - We will have 1 hour team meetings at least once a week.
+  - Team meetings will primarily be in the Stud.
+- How will the quality of work be maintained (reviewing each others’ code? team review meetings? pair programming?);
+  - We will review each others’ code to ensure each of our parts are cohesive.
+  - When we merge code, we will review the code to make sure the app is still functioning.
+  - We will make sure to make lots of commits and work on separate branches.
+  - If there are major issues, we will schedule emergency meetings to go through the code and debug.
+- How tasks will be assigned, and what to do if deadlines are missed;
+  - Tasks will be assigned at weekly meetings based on preferences.
+  - If deadlines are missed, we will help each other out as much as possible.
+    - We will communicate if we think we cannot complete a task in time.
+- How decisions will be made and any disagreements resolved.
+  - Major decisions will be decided at weekly meetings and minor decisions that come up can be discussed asynchronously.
+  - For disagreements, we will try our best to compromise or ask our mentor for advice to make more informed decisions.
