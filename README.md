@@ -83,7 +83,7 @@ Make sure to restart/rebuild the backend server when debugging locally to see ch
 
 The concept backend repo is located at https://github.com/61040-fa25/concept_backend.
 
-Make sure that the current remote is similar the following with `git remote -v`:
+Make sure that the current remote is similar to the following with `git remote -v`:
 
 ```
 origin  git@github.com:jocelynz4890/panko-backend.git (fetch)
