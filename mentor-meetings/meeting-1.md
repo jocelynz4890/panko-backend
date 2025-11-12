@@ -20,6 +20,7 @@ N/A
 - what should be addressed in project pitch video? show VSD/other aspects of functional design?
 - scope of project? how many concepts?
 - do we need friending if our app emphasizes individual experiences? could it be implemented after our MVP?
+- how to separate recipe book/recipes/snapshots into concepts?
 
 ## Plans and Decisions
 
