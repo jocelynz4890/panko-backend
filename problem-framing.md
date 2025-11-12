@@ -1,9 +1,9 @@
-**Problem Framing**
+# **Problem Framing**
 
-**Domain:**  
+### **Domain:**
 Meal and recipe tracking — helping users document, organize, and improve their cooking experiences over time. The focus is on managing personal recipes, tracking when and how dishes are made, and planning future meals in a structured, enjoyable way.
 
-**Problem:**  
+### **Problem:**
 Many home cooks lack an organized system to record and revisit their cooking experiences.
 
 - There’s no convenient way to track all recipes made, when they were made, and how they compare in quality.
@@ -13,7 +13,7 @@ Many home cooks lack an organized system to record and revisit their cooking exp
 
 As a result, users lose valuable information about their cooking progress, forget what worked or didn’t, and struggle to coordinate what to cook next.
 
-**Evidence:**
+### **Evidence:**
 
 - [https://realfoodwholelife.com/feelgoodeffect/end-food-decision-fatigue/](https://realfoodwholelife.com/feelgoodeffect/end-food-decision-fatigue/)
   - This is an article about food decision fatigue. The article states that people make, on average, 227 decisions about food a day. According to the author, this can lead to mental exhaustion. A recommended way to lower this decision fatigue is to make decisions in advance, such as through a meal plan/calendar. Overall, this is good evidence that the problem of not knowing what to eat is prominent.
@@ -26,7 +26,7 @@ As a result, users lose valuable information about their cooking progress, forge
 - [https://food52.com/story/28178-erin-mcdowell-netflix-nailed-it](https://food52.com/story/28178-erin-mcdowell-netflix-nailed-it)
   - This is an interview transcript with a chef that was featured on a Netflix show. One tip she gives is to keep track of your iterations of a recipe so that you can make improvements. She says this is a good way to learn and perfect recipes because if something goes wrong you know exactly what recipe you used and can adjust. She mentions this is difficult to do for many at home cooks, and they don’t learn from their mistakes or improve their recipes as a result.
 
-**Comparables:**
+### **Comparables:**
 
 - Beli ([https://beliapp.com/](https://beliapp.com/)) is a social restaurant discovery app that personalizes dining recommendations based on your taste. It learns what kinds of restaurants you enjoy from the places you rate, then curates a ranked list of spots you’ll probably also like. You can also follow friends, see their favorites, and share restaurant experiences. Traditional review platforms (like Yelp or Google Maps) show average ratings that don’t reflect your personal preferences or taste. Beli solves this by using taste-based personalization instead of crowdsourced averages. Beli also allows you to view your personal restaurant rankings as lists categorized by restaurant type, serving as a way to look back on all of the places you’ve been to.
 - Paprika Recipe Manager ([https://www.paprikaapp.com/](https://www.paprikaapp.com/)) is an app for organizing recipes, making meal plans, and creating grocery lists. It enables users to find recipes from the web or make their own, add them to a meal plan calendar, and make a grocery list for the recipe.
@@ -35,9 +35,9 @@ As a result, users lose valuable information about their cooking progress, forge
 - AnyList ([https://www.anylist.com/](https://www.anylist.com/)) is a shared grocery list and recipe app. A user can make a grocery list, share it with someone, and any changes to the list get automatically updated on both ends (similar to a shared google doc). It also has a recipe organizer that keeps track of your recipes and allows you to add them from outside sources. A user then can add the recipe to their grocery list, updating the list.
 - Pepper ([https://www.peppertheapp.com/](https://www.peppertheapp.com/)) is a social cookbook app that allows users to share recipes, as well as browse other recipes in their explore page. Users can build a “cookbook” of recipes that is visible to their friends on the app. The app also features recipes from some celebrity chefs. Another feature of this app is that you can make a “bucket list” of recipes to make and check them off as you make them.
 
-**Features:**
+## **Features:**
 
-- The home page could feature different recipe books with a user-specified category, for example, they could represent different types of food/drinks, or courses of a meal such as appetizers and desserts.
+- The **home page** could feature different recipe books with a user-specified category, for example, they could represent different types of food/drinks, or courses of a meal such as appetizers and desserts.
 - Each **recipe book** would contain
   - Table of contents, which lists each recipe along with useful metadata about that recipes (such as time to make or rating), for ease of reference
   - Recipe rankings, where each recipe can be ranked on a scale from 1-5 stars
@@ -56,32 +56,32 @@ As a result, users lose valuable information about their cooking progress, forge
 - A **recommendations** page could show the user recipes similar to those that they create, or those that are trending.
 - **Tagging** recipes in order to better support a **recommendation** functionality or a **search** functionality, where users can search from a database of publicly shared recipes. This could also support a **filtering** feature that allows the user to filter by recipes that take a certain amount of time to make, or have some specific qualities that would be defined in their tags.
 
-**Ethical Analysis**
+## **Ethical Analysis**
 
-**Stakeholders**  
-**Insight 1 Direct Stakeholders**  
-**Observation:** Our primary direct stakeholders include home cooks and meal planners.  
+### **Stakeholders**
+**Insight 1 Direct Stakeholders**
+**Observation:** Our primary direct stakeholders include home cooks and meal planners.
 **Design Response** Users who plan meals often want to track the nutrition facts of their meals. As part of the food diary, we will include a feature where users will be able to log the nutrition of each of their meals and view their daily/weekly nutrition. Recipes can include nutrition facts as well.
 
-**Time**  
-**Insight 2 Accumulation of Recipes Over Time**  
-**Observation:** After years of use, users will accumulate a lot of recipes, leading to a large personal library to choose from when planning meals. However, with the number of accumulated recipes, users could feel overwhelmed by the amount of choices or struggle to find certain recipes.  
+### **Time**
+**Insight 2 Accumulation of Recipes Over Time**
+**Observation:** After years of use, users will accumulate a lot of recipes, leading to a large personal library to choose from when planning meals. However, with the number of accumulated recipes, users could feel overwhelmed by the amount of choices or struggle to find certain recipes.
 **Design Response:** We will include a search and filtering system for users’ recipes. Users will be able to add tags to recipes and use these tags to filter and search for certain recipes.
 
-**Insight 3 Adaptation (Lifestyle Changes)**  
-**Observation:** Users are able to save recipes and assign certain recipes for certain dates. The app’s meal tracking and planning features support a lifestyle change towards having more organized, home-cooked meals. In order to make these recipes, users have to go into each recipe and view the ingredients list. With users potentially planning three meals a day, this would be tedious  
+**Insight 3 Adaptation (Lifestyle Changes)**
+**Observation:** Users are able to save recipes and assign certain recipes for certain dates. The app’s meal tracking and planning features support a lifestyle change towards having more organized, home-cooked meals. In order to make these recipes, users have to go into each recipe and view the ingredients list. With users potentially planning three meals a day, this would be tedious
 **Design Response:** We will introduce a shopping list feature that lets users add recipes to their shopping list. The ingredients across the recipes will aggregate into one list.
 
-**Values**  
-**Insight 4 Privacy vs Social Sharing Tension**  
-**Observation** Users may want to share some recipes and keep others private.  
+### **Values**
+**Insight 4 Privacy vs Social Sharing Tension**
+**Observation** Users may want to share some recipes and keep others private.
 **Design Response** We will have a friendship system that lets users see others' activity and recipes. The app will also allow users to adjust the visibility settings of each recipe and meal (eg. public, private, visible to friends only)
 
-**Insight 5: Environmental Sustainability**  
-**Observation:** The ingredient tracker and meal planner can support environmental sustainability by helping users track what ingredients they need to purchase for each of their meals, reducing food waste. However, this app could also encourage users to constantly cook new, trendy recipes leading to more food waste.  
+**Insight 5: Environmental Sustainability**
+**Observation:** The ingredient tracker and meal planner can support environmental sustainability by helping users track what ingredients they need to purchase for each of their meals, reducing food waste. However, this app could also encourage users to constantly cook new, trendy recipes leading to more food waste.
 **Design Response:** We will have a meal planner and ingredient tracker/shopping list feature that allows users to assign recipes for a certain date and it automatically adds the ingredients the users need to buy to make those recipes. In order to encourage users to not waste ingredients, our search feature will allow users to search for recipes by ingredients.
 
-**Pervasiveness**  
-**Insight 6: Accounting for Culture**  
-**Observation:** A positive effect of the app's recipe sharing in one culture might be the celebration of regional cuisine. However, in another culture with strong traditions of oral recipe transmission or secret family dishes, this feature could be seen as a breakdown, devaluing culinary heritage and commodifying culturally significant knowledge.  
+### **Pervasiveness**
+**Insight 6: Accounting for Culture**
+**Observation:** A positive effect of the app's recipe sharing in one culture might be the celebration of regional cuisine. However, in another culture with strong traditions of oral recipe transmission or secret family dishes, this feature could be seen as a breakdown, devaluing culinary heritage and commodifying culturally significant knowledge.
 **Design Response:** For recipes, users can label the type of cuisine for other users to more easily find. Additionally, Implement sharing controls. Allow users to mark recipes as private, shared with friends, or public.
