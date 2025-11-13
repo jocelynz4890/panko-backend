@@ -18,16 +18,17 @@ N/A
 ## Issues
 
 - what should be addressed in project pitch video? show VSD/other aspects of functional design?
+  - up to you, validate that we have a problem
+  - explain why our solution is good way to solve it
 - scope of project? how many concepts?
+  - 3-5ish
 - do we need friending if our app emphasizes individual experiences? could it be implemented after our MVP?
-- how to separate recipe book/recipes/snapshots into concepts?
+  - we don't need friending
 
 ## Plans and Decisions
 
-Decisions made:
+Feedback on probem framing:
 
-- list of decisions
-
-Plans for next week:
-
-- list of plans
+- lots of features listed; solving different problems
+  - scope down by writing a user journey
+- versioning feature is unique
