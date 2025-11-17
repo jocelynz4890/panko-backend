@@ -19,6 +19,8 @@
 - `design.md` detailing the overall design
 - `team-contract.md` contains the team's contract
 - `problem-framing.md` contains the problem framing assignment responses
+- `functional_design.md` contains the deliverables for functional design
+
 - `api.md` TODO after running api-extraction prompt (`api-extraction-from-code.md` using Context)
 
 ## Initial setup
