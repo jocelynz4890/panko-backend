@@ -116,13 +116,13 @@ See our [revised problem framing](problem-framing.md).
 ## 🔗 Syncs
 
 ### sync validateCreateBook
-**When** `Request.createBook(user, token, name)`
+**When** `Request.createBook(user, token, name)`\
 **Then** `Authentication.validateToken(user, token)`
 
 
 ### sync createBook
 **When** `Request.createBook(user, token, name)`
-`Authentication.validateToken(user, token): (user: User)`
+`Authentication.validateToken(user, token): (user: User)`\
 **Then** `RecipeBook.createRecipeBook(user, name)`
 
 **Note:** These two syncs are an example of basic authentication check. All other actions that require user authentication will follow the same format.
@@ -130,13 +130,13 @@ See our [revised problem framing](problem-framing.md).
 ----
 ### sync createNewRecipe
 **When** `Request.createNewRecipe(user, token, name, description, book)`
-`Authentication.validateToken(user, token): (user: User)`
+`Authentication.validateToken(user, token): (user: User)`\
 **Then** `Recipe.createRecipe(user, name)`
 
 ### sync addNewRecipeToBook
 **When** `Request.createNewRecipe(user, token, name, description, book)`
 `Authentication.validateToken(user, token): (user: User)`
-`Recipe.createRecipe(user, name): (recipe: Recipe)`
+`Recipe.createRecipe(user, name): (recipe: Recipe)`\
 **Then** `RecipeBook.addRecipeToBook(recipe, book)`
 
 **Note:** Multistep process: authenticate, create recipe, then add to specified book
@@ -146,7 +146,7 @@ See our [revised problem framing](problem-framing.md).
 ### sync removeSnapshotFromRecipe
 **When** `Request.removeSnapshot(user, token, snapshot, recipe)`\
 `Authentication.validateToken(user,token):(user:User)`\
-`Snapshots.deleteSnapshot(snapshot): (snapshot: Snapshot)`
+`Snapshots.deleteSnapshot(snapshot): (snapshot: Snapshot)`\
 **Then** `Recipes.removeSnapshot(snapshot: snapshot, recipe: snapshot.recipe)`
 
 
@@ -161,13 +161,13 @@ See our [revised problem framing](problem-framing.md).
 ### sync removeRecipeFromBook
 **When** `Request.removeRecipe(user, token, recipe, book)`\
 `Authentication.validateToken(user,token):(user:User)`\
-`Recipe.deleteRecipe(recipe): (recipe: Recipe)`
+`Recipe.deleteRecipe(recipe): (recipe: Recipe)`\
 **Then** `RecipeBook.removeRecipeFromBook(recipe: Recipe, book: RecipeBook)`
 
 ### sync deleteAllSnapshotsFromRecipe
 **When** `Request.removeRecipe(user, token, recipe, book)`\
 `Authentication.validateToken(user,token):(user:User)`\
-`Recipe.deleteRecipe(recipe): (recipe: Recipe)`
+`Recipe.deleteRecipe(recipe): (recipe: Recipe)`\
 **Then** `Snapshot.deleteAllSnapshotsForRecipe(recipe:Recipe)`
 
 
