@@ -77,7 +77,7 @@ See our [revised problem framing](problem-framing.md).
     - a `subname` of type `String`
     - a set of `pictures` of type `FilePath`
     - a `date` of type `Date`
-    - a recipe Recipe
+    - a `recipe` of type `Recipe`
 - actions:
   - createSnapshot (ingredientsList: String, subname: String, pictures: Path, date: Date, instructions: String, note: String, ranking: Ranking, recipe: Recipe): (snapshot: Snapshot)
     - requires: ranking is between 1 and 5
