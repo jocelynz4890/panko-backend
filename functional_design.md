@@ -4,6 +4,7 @@
 
 See our [revised problem framing](problem-framing.md).
 
+## Pitch
 ## ✏️ Concept Design
 
 ### Recipe Book
@@ -43,7 +44,7 @@ See our [revised problem framing](problem-framing.md).
     - a set of snapshots of type `Snapshot`
     - a `defaultSnapshot` of type `Snapshot`
 - actions:
-  - createRecipe (user: User, name: String, description: String)
+  - createRecipe (user: User, name: String, description: String):(recipe:Recipe)
     - requires: user exists
     - effect: create a new recipe with given arguments and an empty set of snapshots
   - editRecipeName(snapshot: Snapshot, newName: String, description: String): (recipe: Recipe)
@@ -76,8 +77,9 @@ See our [revised problem framing](problem-framing.md).
     - a `subname` of type `String`
     - a set of `pictures` of type `FilePath`
     - a `date` of type `Date`
+    - a recipe Recipe
 - actions:
-  - createSnapshot (ingredientsList: String, subname: String, pictures: Path, date: Date, instructions: String, note: String, ranking: Ranking): (snapshot: Snapshot)
+  - createSnapshot (ingredientsList: String, subname: String, pictures: Path, date: Date, instructions: String, note: String, ranking: Ranking, recipe: Recipe): (snapshot: Snapshot)
     - requires: ranking is between 1 and 5
     - effects: creates a new snapshot with the given arguments
   - editSnapshot (ingredientsList: String, subname: String, pictures: Path, date: Date, instructions: String, note: String, ranking: Ranking):(snapshot: Snapshot)
@@ -86,6 +88,9 @@ See our [revised problem framing](problem-framing.md).
   - deleteSnapshot(snapshot: Snapshot):(snapshot: Snapshot)
     - requires: snapshot exists
     - effect: deletes the given snapshot
+  - deleteAllSnapshotsForRecipe(recipe: Recipe)
+    - requires: True
+    - effect: deletes all snapshots associated with the given recipe
 
 ### Calendar
 
@@ -103,6 +108,68 @@ See our [revised problem framing](problem-framing.md).
   - deleteScheduledRecipe(scheduledRecipe: ScheduledRecipe)
     - requires: scheduledRecipe exists
     - effects: deletes the given scheduledRecipe
+  - deleteAllScheduledRecipesWithSnapshot(snapshot:Snapshot)
+    - requires: True
+    - effects: finds all ScheduledRecipes associated with the given snapshot and deletes them
+
+
+## 🔗 Syncs
+
+### sync validateCreateBook
+**When** `Request.createBook(user, token, name)`
+**Then** `Authentication.validateToken(user, token)`
+
+
+### sync createBook
+**When** `Request.createBook(user, token, name)`
+`Authentication.validateToken(user, token): (user: User)`
+**Then** `RecipeBook.createRecipeBook(user, name)`
+
+**Note:** These two syncs are an example of basic authentication check. All other actions that require user authentication will follow the same format.
+
+----
+### sync createNewRecipe
+**When** `Request.createNewRecipe(user, token, name, description, book)`
+`Authentication.validateToken(user, token): (user: User)`
+**Then** `Recipe.createRecipe(user, name)`
+
+### sync addNewRecipeToBook
+**When** `Request.createNewRecipe(user, token, name, description, book)`
+`Authentication.validateToken(user, token): (user: User)`
+`Recipe.createRecipe(user, name): (recipe: Recipe)`
+**Then** `RecipeBook.addRecipeToBook(recipe, book)`
+
+**Note:** Multistep process: authenticate, create recipe, then add to specified book
+
+---
+
+### sync removeSnapshotFromRecipe
+**When** `Request.removeSnapshot(user, token, snapshot, recipe)`\
+`Authentication.validateToken(user,token):(user:User)`\
+`Snapshots.deleteSnapshot(snapshot): (snapshot: Snapshot)`
+**Then** `Recipes.removeSnapshot(snapshot: snapshot, recipe: snapshot.recipe)`
+
+
+### sync removeSnapshotFromCalendar
+**When** `Request.removeSnapshot(user, token, snapshot, recipe)`\
+`Authentication.validateToken(user,token):(user:User)`\
+**Then** `Calendar.deleteAllScheduledRecipesWithSnapshot(snapshot: snapshot)`
+
+**Note:** Clean up calendar entries with given snapshot when snapshot is deleted
+
+---
+### sync removeRecipeFromBook
+**When** `Request.removeRecipe(user, token, recipe, book)`\
+`Authentication.validateToken(user,token):(user:User)`\
+`Recipe.deleteRecipe(recipe): (recipe: Recipe)`
+**Then** `RecipeBook.removeRecipeFromBook(recipe: Recipe, book: RecipeBook)`
+
+### sync deleteAllSnapshotsFromRecipe
+**When** `Request.removeRecipe(user, token, recipe, book)`\
+`Authentication.validateToken(user,token):(user:User)`\
+`Recipe.deleteRecipe(recipe): (recipe: Recipe)`
+**Then** `Snapshot.deleteAllSnapshotsForRecipe(recipe:Recipe)`
+
 
 ## 🧭 User Journey
 
