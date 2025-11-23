@@ -109,13 +109,13 @@ export default class SnapshotConcept {
   async editSnapshot(
     inputs: {
       snapshot: Snapshot;
-      ingredientsList: string;
-      subname: string;
-      pictures: FilePath[];
-      date: Date;
-      instructions: string;
-      note: string;
-      ranking: Ranking;
+      ingredientsList?: string;
+      subname?: string;
+      pictures?: FilePath[];
+      date?: Date;
+      instructions?: string;
+      note?: string;
+      ranking?: Ranking;
     },
   ): Promise<{ snapshot?: Snapshot; error?: string }> {
     const {
@@ -129,23 +129,30 @@ export default class SnapshotConcept {
       ranking,
     } = inputs;
 
-    if (ranking < 1 || ranking > 5) {
-        return { error: "Ranking must be between 1 and 5" };
+    if (
+      ranking !== undefined && (ranking < 1 || ranking > 5)
+    ) {
+      return { error: "Ranking must be between 1 and 5" };
+    }
+
+    const updates: Partial<Omit<Snapshots, "_id">> = {};
+    if (ingredientsList !== undefined) {
+      updates.ingredientsList = ingredientsList;
+    }
+    if (subname !== undefined) updates.subname = subname;
+    if (pictures !== undefined) updates.pictures = pictures;
+    if (date !== undefined) updates.date = date;
+    if (instructions !== undefined) updates.instructions = instructions;
+    if (note !== undefined) updates.note = note;
+    if (ranking !== undefined) updates.ranking = ranking;
+
+    if (Object.keys(updates).length === 0) {
+      return { error: "No edits provided" };
     }
 
     const result = await this.snapshots.updateOne(
       { _id: snapshot },
-      {
-        $set: {
-          ingredientsList,
-          subname,
-          pictures,
-          date,
-          instructions,
-          note,
-          ranking,
-        },
-      },
+      { $set: updates },
     );
 
     if (result.matchedCount === 0) {
