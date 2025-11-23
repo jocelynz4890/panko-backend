@@ -113,7 +113,7 @@ This will produce some markdown that you should paste under the appropriate file
 This tool packages up your concept and synchronization specifications, given the context of your application, as a single document to hand-off for frontend development. 
 
 ```markdown
-[@spec-for-frontend](design/tools/spec-for-frontend.md)
+[@spec-for-frontend](/design/tools/spec-for-frontend.md)
 ```
 
 > **Important:** the context mainly works off your specifications, so be sure to keep them up-to-date with your code! Alternatively, add inclusions for your actual code files to the context of this tool (how best to do this in a modular fashion is left as an exercise).
