@@ -1,29 +1,29 @@
-# Recipe Concept
+# Dish Concept
 
-- purpose: provide a stable identity and high-level categorization for a dish, together with a history of its recorded attempts, so that a person can quickly find that dish and see how their experience with it has evolved over time without relying on memory.
-- principle: over time, a person uses recipes as named anchors for the dishes they care about. When they decide they want to be able to track a dish, they create a new recipe by giving it a name that they will recognize and adding tags that reflect how they think about it (for example, cuisine, difficulty, or occasion). Each time they want the dish’s record to reflect another cooking experience, they add a new attempt to the recipe’s history. Later, when they are deciding what to cook or looking back on past cooking, they use the recipe’s name and tags to find it quickly and then review the sequence of attempts associated with it to see how often they have made it and how their results have changed. Occasionally they update the name or tags so that the recipe remains easy to find as their tastes and habits evolve.
+- purpose: provide a persistent, easy-to-find record for a dish, including its description, and the variations of recipes to make it. A Dish acts as the long-term home for everything related to cooking that dish, so a person can quickly recall what the dish is, what it’s like, and how their experiences with it have evolved over time.
+- principle: Over time, a person creates and maintains Dishes as the stable “anchors” for the recipes they care about. When they want to track their experience with a dish, they create a Dish with a recognizable name and a description that helps them remember what it is. Each time they cook the dish, they add a new snapshot to its history, building a chronological record of outcomes, variations, and notes. Later, when deciding what to cook or reflecting on past attempts, they can easily find the Dish by name or by browsing, then review its recipe iterait to understand how often they’ve made it, what changes they’ve tried, and how the results have developed. As their understanding or habits change, they can update the Dish’s name or description so it remains meaningful and easy to find.
 - state:
-  - a set of `Recipes` with
+  - a set of `Dish`'s' with
     - a `name` of type `String`
     - a `description` of type `String`
     - a set of snapshots of type `Snapshot`
     - a `defaultSnapshot` of type `Snapshot`
 - actions:
-  - createRecipe (user: User, name: String, description: String):(recipe:Recipe)
+  - createDish (user: User, name: String, description: String):(Dish:Dish)
     - requires: user exists
-    - effect: create a new recipe with given arguments and an empty set of snapshots
-  - editRecipeName(recipe: Recipe, newName: String, description: String): (recipe: Recipe)
-    - requires: recipe exists
-    - effect: edits recipe with new name and description
-  - deleteRecipe (recipe: Recipe): (recipe: Recipe)
-    - requires: recipe exists
-    - effect: deletes the given recipe
-  - addSnapshot(snapshot: Snapshot, recipe: Recipe)
-    - requires: recipe and snapshot exists
+    - effect: create a new Dish with given arguments and an empty set of snapshots
+  - editDishName(Dish: Dish, newName: String, description: String): (Dish: Dish)
+    - requires: Dish exists
+    - effect: edits Dish with new name and description
+  - deleteDish (Dish: Dish): (Dish: Dish)
+    - requires: Dish exists
+    - effect: deletes the given Dish
+  - addSnapshot(snapshot: Snapshot, Dish: Dish)
+    - requires: Dish and snapshot exists
     - effects: adds the snapshot the set of snapshots
-  - removeSnapshot (snapshot: Snapshot, recipe: Recipe)
-    - requires: recipe and snapshot exists
-    - effect: removes the snapshot from the given recipe’s set of snapshots
-  - setDefaultSnapshot (snapshot: Snapshot, recipe: Recipe)
-    - requires: snapshot exists and is in recipe’s set of snapshots
-    - effects: sets defaultSnapshot of recipe to given snapshot
+  - removeSnapshot (snapshot: Snapshot, Dish: Dish)
+    - requires: Dish and snapshot exists
+    - effect: removes the snapshot from the given Dish’s set of snapshots
+  - setDefaultSnapshot (snapshot: Snapshot, Dish: Dish)
+    - requires: snapshot exists and is in Dish’s set of snapshots
+    - effects: sets defaultSnapshot of Dish to given snapshot
