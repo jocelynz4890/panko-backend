@@ -11,6 +11,7 @@ deno compile -A --output ctx .ctx/context.ts
 
 - Insert your `GEMINI_API_KEY` into `.env.template` and rename to `.env`, or simply copy into your existing `.env` file.
 - For VSCode users, we recommend installing Terry's [ctx-tool](https://marketplace.visualstudio.com/items?itemName=terrytwk.ctx-tool) extension.
+- When you actually run the code, don't forget to include any other environment variables you need, such as database configuration.
 
 ## Using Context
 
