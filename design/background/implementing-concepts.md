@@ -197,12 +197,6 @@ the query specification
 
 says that the query should return an array of dictionaries, each with a `user` field that holds a dictionary with a `username` and `password` field.
 
-# Imports
-
-The following `deno.json` file lists additional imports that are available to help ease imports. In particular, the utility folder and the concept folder are available as the `@utils` and `@concepts` prefixes.
-
-[@deno.json](/deno.json)
-
 # Initialization
 
 We provide a helper database script in `@utils` that reads the environment variables in your `.env` file and initializes a MongoDB database. For normal app development, use:
