@@ -21,5 +21,5 @@ concept Authentication
 
         validateToken (user:User, token:String):(user:User)
             requires user exists and token matches
-            effects verifies that user if authenticated.
+            effects verifies that user by returning it if authenticated
 ```
