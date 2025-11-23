@@ -107,3 +107,13 @@ To mitigate the LLM making the same mistake again for other concepts, extract th
 This will produce some markdown that you should paste under the appropriate file under `design/memories`, currently either to do with `concept-learnings.md` or `sync-learnings.md`, which will enrich the associated generation tools with the memory.
 
 > **Important:** as you can see, none of these tools are "special" code or set in stone! They are simply a pattern of text and composing documentation that are meant to help you get started in thinking about managing your collaboration with LLMs. We **highly encourage** coming up with your own tools and patterns, and exercise your agency to create the workflow best tailored to you.
+
+### tool: `spec-for-frontend.md`
+
+This tool packages up your concept and synchronization specifications, given the context of your application, as a single document to hand-off for frontnd development. 
+
+```markdown
+[@spec-for-frontend](design/tools/spec-for-frontend.md)
+```
+
+> **Important:** the context mainly works off your specifications, so be sure to keep them up-to-date with your code! Alternatively, add inclusions for your actual code files to the context of this tool (how best to do this in a modular fashion is left as an exercise).

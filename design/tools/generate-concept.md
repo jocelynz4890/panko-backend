@@ -1,4 +1,4 @@
-[@concept-background](concept-background.md)
+[@concept-background](../templates/concept-background.md)
 
 [@testing-concepts](../background/testing-concepts.md)
 
