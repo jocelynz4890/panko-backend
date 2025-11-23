@@ -1,0 +1,25 @@
+### Recipe Book
+
+- purpose: provide each person with named collections of dish entries, organized through a table of contents, so they can quickly locate and choose among a manageable set of recipes instead of scanning their entire recipe history.
+- principle: a person uses recipe books as focused collections of dishes that match how they plan meals. When they want to create a new collection, they define a recipe book by choosing a name that reflects the theme of that collection and associating it with themselves. Over time, as they decide which dishes belong in that collection, they add entries to the book’s table of contents, each entry linking the book to a particular dish and giving it a recognizable title. When they are deciding what to cook, they select one of their books, scan its table of contents entries to see which dishes fit their current constraints, and pick from that smaller set. Occasionally they rename a book or adjust its table of contents by adding, removing, or renaming entries so that the collections continue to match how they think about their cooking.
+- states:
+  - a set of `RecipeBooks` with
+    - a user of type `User`
+    - a set of `recipe` of type `Recipe`
+    - a `name` of type `String`
+- actions:
+  - createRecipeBook(user: user, name: String)
+    - requires: user exists
+    - effects: adds recipe book with user and name and an empty set of recipes
+  - editRecipeBookName(newName: String)
+    - requires: recipe book exists
+    - effects: changes recipe book’s name to newName
+  - addRecipeToBook(recipe: Recipe, book: RecipeBook)
+    - requires: recipe and recipe book exists
+    - effect: adds the given recipe to the book’s set of recipes
+  - removeRecipeFromBook(recipe: Recipe, book: RecipeBook)
+    - requires: recipe and recipe book exists
+    - effect: removes recipe from the book’s set of recipes
+  - deleteRecipeBook(book: RecipeBook)
+    - requires: recipe book exists
+    - effects: deletes the given recipe book

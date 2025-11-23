@@ -4,6 +4,6 @@
 
 [@implementing-concepts](../../background/implementing-concepts.md)
 
-[@Recipe](Recipe.md)
+[@Recipe](Calendar.md)
 
-# implement: Recipe
+# implement: Calendar
