@@ -1,3 +1,12 @@
+---
+timestamp: 'Sun Nov 23 2025 14:17:15 GMT-0500 (Eastern Standard Time)'
+parent: '[[..\20251123_141715.6ab9e436.md]]'
+content_id: c90c370d8129ca8ffb1a46ec4783fee36e90033f2029f40495a348bd74538f75
+---
+
+# file: src/concepts/Calendar/CalendarConcept.ts
+
+```typescript
 import { Collection, Db } from "npm:mongodb";
 import { Empty, ID } from "@utils/types.ts";
 import { freshID } from "@utils/database.ts";
@@ -108,7 +117,7 @@ export default class CalendarConcept {
     }>
   > {
     const recipes = await this.scheduledRecipes.find({ user }).toArray();
-
+    
     // Map internal state to output format
     return recipes.map((r) => ({
       scheduledRecipe: {
@@ -119,3 +128,4 @@ export default class CalendarConcept {
     }));
   }
 }
+```

@@ -1,3 +1,12 @@
+---
+timestamp: 'Sun Nov 23 2025 14:18:27 GMT-0500 (Eastern Standard Time)'
+parent: '[[..\20251123_141827.faf39dbe.md]]'
+content_id: 55d55502a07b49f1f00dde74f627fc1fa1c5177b987b38d59491868a4ec3e302
+---
+
+# file: src/concepts/Calendar/CalendarConcept.test.ts
+
+```typescript
 import { assertEquals, assertNotEquals } from "jsr:@std/assert";
 import { testDb } from "@utils/database.ts";
 import { ID } from "@utils/types.ts";
@@ -9,7 +18,7 @@ Deno.test("--------------- 📅 CalendarConcept - scheduling and management 📅
 
   const alice = "user:Alice" as ID;
   const bob = "user:Bob" as ID;
-
+  
   const pizzaSnapshot = "snapshot:Pizza" as ID;
   const pastaSnapshot = "snapshot:Pasta" as ID;
 
@@ -21,7 +30,7 @@ Deno.test("--------------- 📅 CalendarConcept - scheduling and management 📅
     "Test Case #1: Principle - Assign snapshot to date and verify",
     async () => {
       console.log("[1] Alice plans to cook Pizza today...");
-
+      
       const assignRes = await calendar.assignSnapshotToDate({
         user: alice,
         snapshot: pizzaSnapshot,
@@ -34,12 +43,12 @@ Deno.test("--------------- 📅 CalendarConcept - scheduling and management 📅
 
       console.log("[1] Verifying via query...");
       const recipes = await calendar._getScheduledRecipes({ user: alice });
-
+      
       assertEquals(recipes.length, 1);
       assertEquals(recipes[0].scheduledRecipe.snapshot, pizzaSnapshot);
       assertEquals(recipes[0].scheduledRecipe.date, today);
       assertEquals(recipes[0].scheduledRecipe.scheduledRecipe, scheduledId);
-
+      
       console.log("[1] ✅ Alice successfully scheduled a dish.");
     }
   );
@@ -48,7 +57,7 @@ Deno.test("--------------- 📅 CalendarConcept - scheduling and management 📅
     "Test Case #2: Deleting a scheduled recipe",
     async () => {
       console.log("[2] Alice decides not to cook Pizza...");
-
+      
       // First, find the ID (we know there is one from step 1)
       const recipesBefore = await calendar._getScheduledRecipes({ user: alice });
       const targetId = recipesBefore[0].scheduledRecipe.scheduledRecipe;
@@ -58,7 +67,7 @@ Deno.test("--------------- 📅 CalendarConcept - scheduling and management 📅
 
       const recipesAfter = await calendar._getScheduledRecipes({ user: alice });
       assertEquals(recipesAfter.length, 0);
-
+      
       console.log("[2] ✅ Scheduled recipe deleted.");
     }
   );
@@ -67,13 +76,13 @@ Deno.test("--------------- 📅 CalendarConcept - scheduling and management 📅
     "Test Case #3: Bulk deletion by snapshot (e.g. if original recipe is deleted)",
     async () => {
       console.log("[3] Alice schedules Pasta for today and tomorrow...");
-
+      
       await calendar.assignSnapshotToDate({
         user: alice,
         snapshot: pastaSnapshot,
         date: today,
       });
-
+      
       await calendar.assignSnapshotToDate({
         user: alice,
         snapshot: pastaSnapshot,
@@ -98,7 +107,7 @@ Deno.test("--------------- 📅 CalendarConcept - scheduling and management 📅
       const recipesAfter = await calendar._getScheduledRecipes({ user: alice });
       assertEquals(recipesAfter.length, 1);
       assertEquals(recipesAfter[0].scheduledRecipe.snapshot, pizzaSnapshot);
-
+      
       console.log("[3] ✅ Only Pizza remains. All Pasta instances removed.");
     }
   );
@@ -119,10 +128,11 @@ Deno.test("--------------- 📅 CalendarConcept - scheduling and management 📅
       // From previous step, Alice has 1 Pizza. Bob just added 1 Pizza.
       assertEquals(aliceRecipes.length, 1);
       assertEquals(bobRecipes.length, 1);
-
+      
       console.log("[4] Alice and Bob's calendars are distinct.");
     }
   );
 
   await client.close();
 });
+```
