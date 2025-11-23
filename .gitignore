@@ -1,3 +1,6 @@
 .env
-ctx.exe
+.DS_Store
+**/.DS_Store
 ctx
+ctx.exe
+.obsidian/workspace.json
