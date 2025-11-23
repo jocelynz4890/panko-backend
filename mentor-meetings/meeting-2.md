@@ -20,6 +20,8 @@ Sunday, November 23
 - how should we handle images for our snapshot concept?
 - we sometimes get an error with TLS connection, we arent sure how to fix this.
 - do we have to implement feedback if we can justify our choices?
+- is it ok to have recipes and snapshots as seperate concepts?
+- how should we format our syncs?
 
 ## Plans and Decisions
 
