@@ -110,10 +110,14 @@ This will produce some markdown that you should paste under the appropriate file
 
 ### tool: `spec-for-frontend.md`
 
-This tool packages up your concept and synchronization specifications, given the context of your application, as a single document to hand-off for frontnd development. 
+This tool packages up your concept and synchronization specifications, given the context of your application, as a single document to hand-off for frontend development. 
 
 ```markdown
 [@spec-for-frontend](design/tools/spec-for-frontend.md)
 ```
 
 > **Important:** the context mainly works off your specifications, so be sure to keep them up-to-date with your code! Alternatively, add inclusions for your actual code files to the context of this tool (how best to do this in a modular fashion is left as an exercise).
+
+## Debugging prompts
+
+At any time, if you feel like the LLM simply isn't receiving the right context or seems to be hallucinating in unexpected ways, you can view **the exact context** that was passed to the LLM. This is the nature of the `context/` directory, which contains a mirror of the rest of the directory structure, where all files are versioned by timestamp and content hash. Simply go to the corresponding *directory* named after the file you're working on, and step through the versions to see if the LLM received the right context, or e.g. if you forgot to add a newline after an `@` inclusion. We recommend Obsidian to view these version files, as it'll preview the links nicely as embedded blocks.
