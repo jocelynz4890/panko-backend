@@ -15,7 +15,7 @@ import "jsr:@std/dotenv/load";
  * - REQUESTING_TIMEOUT: the timeout for requests, default 10000ms
  * - REQUESTING_SAVE_RESPONSES: whether to persist responses or not, default true
  */
-const PORT = parseInt(Deno.env.get("PORT") ?? "8000", 10);
+const PORT = parseInt(Deno.env.get("PORT") ?? "10000", 10);
 const REQUESTING_BASE_URL = Deno.env.get("REQUESTING_BASE_URL") ?? "/api";
 const REQUESTING_TIMEOUT = parseInt(
   Deno.env.get("REQUESTING_TIMEOUT") ?? "10000",
@@ -199,6 +199,19 @@ export function startRequestingServer(
     }),
   );
 
+  // Health check and root route
+  app.get("/", (c) => {
+    return c.json({ 
+      status: "ok", 
+      message: "Panko backend server is running",
+      baseUrl: REQUESTING_BASE_URL 
+    });
+  });
+
+  app.get("/health", (c) => {
+    return c.json({ status: "healthy" });
+  });
+
   /**
    * PASSTHROUGH ROUTES
    *
@@ -300,6 +313,8 @@ export function startRequestingServer(
   console.log(
     `\n🚀 Requesting server listening for POST requests at base path of ${routePath}`,
   );
+  console.log(`\n📡 Server starting on port ${PORT}...`);
 
-  Deno.serve({ port: PORT }, app.fetch);
+  // Bind to 0.0.0.0 to accept connections from all interfaces (required for Docker/Render)
+  Deno.serve({ port: PORT, hostname: "0.0.0.0" }, app.fetch);
 }
