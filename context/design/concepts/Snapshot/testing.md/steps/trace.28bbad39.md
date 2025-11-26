@@ -1,17 +1,11 @@
-[@implementation](implementation.md)
-
-[@testing-concepts](../../background/testing-concepts.md)
-
-[@example](../../background/example-test.md)
-# test: Snapshot
-
-# response:
-
-# response:
-
-# file: src/snapshot/SnapshotConcept.test.ts
+---
+timestamp: 'Tue Nov 25 2025 19:07:04 GMT-0500 (Eastern Standard Time)'
+parent: '[[..\20251125_190704.8396dde1.md]]'
+content_id: 28bbad39a637ce6f567beb758ba976272465d5a816fe3b7e82a748d736243e91
+---
 
 # trace:
+
 1. **Lifecycle & Persistence**: Create a snapshot for a specific user and recipe, verify it exists in the database, modify its properties (ranking, notes) ensuring persistence, and finally delete it.
 2. **Constraints (Ranking)**: Attempt to create and edit snapshots with rankings outside the allowed range (1-5) to verify the **requires** clause.
 3. **Recipe Association**: Create multiple snapshots across different recipes. Verify that retrieving snapshots for a specific recipe returns the correct subset.

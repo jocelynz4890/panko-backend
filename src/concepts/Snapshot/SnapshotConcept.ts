@@ -1,5 +1,3 @@
-# snapshot implementation
-```ts
 import { Collection, Db } from "npm:mongodb";
 import { Empty, ID } from "@utils/types.ts";
 import { freshID } from "@utils/database.ts";
@@ -108,54 +106,59 @@ export default class SnapshotConcept {
    *
    * **effects** updates the snapshot with the given edits
    */
-  async editSnapshot(
-    inputs: {
-      snapshot: Snapshot;
-      ingredientsList?: string;
-      subname: string;
-      pictures?: FilePath[];
-      date?: Date;
-      instructions?: string;
-      note?: string;
-      ranking: Ranking;
-    },
-  ): Promise<{ snapshot?: Snapshot; error?: string }> {
-    const {
-      snapshot,
-      ingredientsList,
-      subname,
-      pictures,
-      date,
-      instructions,
-      note,
-      ranking,
-    } = inputs;
+async editSnapshot(
+  inputs: {
+    snapshot: Snapshot;
+    ingredientsList?: string;
+    subname?: string;
+    pictures?: FilePath[];
+    date?: Date;
+    instructions?: string;
+    note?: string;
+    ranking?: Ranking;
+  },
+): Promise<{ snapshot?: Snapshot; error?: string }> {
+  const {
+    snapshot,
+    ingredientsList,
+    subname,
+    pictures,
+    date,
+    instructions,
+    note,
+    ranking,
+  } = inputs;
 
-    if (ranking < 1 || ranking > 5) {
-        return { error: "Ranking must be between 1 and 5" };
-    }
-
-    const result = await this.snapshots.updateOne(
-      { _id: snapshot },
-      {
-        $set: {
-          ingredientsList,
-          subname,
-          pictures,
-          date,
-          instructions,
-          note,
-          ranking,
-        },
-      },
-    );
-
-    if (result.matchedCount === 0) {
-      return { error: "Snapshot does not exist" };
-    }
-
-    return { snapshot };
+  // Validate ranking if provided
+  if (ranking !== undefined && (ranking < 1 || ranking > 5)) {
+    return { error: "Ranking must be between 1 and 5" };
   }
+
+  // Build the update object dynamically
+  const updateFields: Partial<Snapshots> = {};
+  if (ingredientsList !== undefined) updateFields.ingredientsList = ingredientsList;
+  if (subname !== undefined) updateFields.subname = subname;
+  if (pictures !== undefined) updateFields.pictures = pictures;
+  if (date !== undefined) updateFields.date = date;
+  if (instructions !== undefined) updateFields.instructions = instructions;
+  if (note !== undefined) updateFields.note = note;
+  if (ranking !== undefined) updateFields.ranking = ranking;
+
+  if (Object.keys(updateFields).length === 0) {
+    return { error: "No fields to update" };
+  }
+
+  const result = await this.snapshots.updateOne(
+    { _id: snapshot },
+    { $set: updateFields },
+  );
+
+  if (result.matchedCount === 0) {
+    return { error: "Snapshot does not exist" };
+  }
+
+  return { snapshot };
+}
 
   /**
    * deleteSnapshot(snapshot: Snapshot):(snapshot: Snapshot)
@@ -203,5 +206,3 @@ export default class SnapshotConcept {
     return await this.snapshots.find({ recipe }).toArray();
   }
 }
-
-```

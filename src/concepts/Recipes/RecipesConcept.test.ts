@@ -1,7 +1,7 @@
 import { assertEquals, assertNotEquals } from "jsr:@std/assert";
 import { testDb } from "@utils/database.ts";
 import { ID } from "@utils/types.ts";
-import RecipesConcept from "./RecipeConcept.ts";
+import RecipesConcept from "./RecipesConcept.ts";
 
 Deno.test("--------------- 🥘 RecipesConcept - principle trace and edge cases 🥘 ---------------", async (t) => {
   const [db, client] = await testDb();

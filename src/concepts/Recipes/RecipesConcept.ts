@@ -18,7 +18,7 @@ type Recipe = ID;
  *   a set of snapshots of type Snapshot
  *   a defaultSnapshot of type Snapshot
  */
-interface RecipeDoc {
+interface RecipesDoc {
   _id: Recipe;
   owner: User; // Stored to satisfy "create with given arguments"
   name: string;
@@ -28,10 +28,10 @@ interface RecipeDoc {
 }
 
 export default class RecipesConcept {
-  recipes: Collection<RecipeDoc>;
+  recipes: Collection<RecipesDoc>;
 
   constructor(private readonly db: Db) {
-    this.recipes = this.db.collection<RecipeDoc>(PREFIX + "recipes");
+    this.recipes = this.db.collection<RecipesDoc>(PREFIX + "recipes");
   }
 
   /**
@@ -185,7 +185,7 @@ export default class RecipesConcept {
   }
 
   /**
-   * _getRecipe (recipe: Recipe): (recipe: RecipeDoc)
+   * _getRecipe (recipe: Recipe): (recipe: RecipesDoc)
    *
    * **requires** recipe exists
    *
@@ -193,7 +193,7 @@ export default class RecipesConcept {
    */
   async _getRecipe(
     { recipe }: { recipe: Recipe },
-  ): Promise<RecipeDoc[]> {
+  ): Promise<RecipesDoc[]> {
     const doc = await this.recipes.findOne({ _id: recipe });
     return doc ? [doc] : [];
   }
