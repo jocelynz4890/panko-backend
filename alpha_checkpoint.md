@@ -1,6 +1,6 @@
 # Alpha Checkpoint Deliverables
 
-## [Screen Recording]()
+## [Screen Recording Link](https://drive.google.com/file/d/1urJLC60OkIFGi5Z0Dl-ks9KTnCKk1SvA/view?usp=sharing)
 
 ## 🅰️ **Updated** Development Plan: Alpha Checkpoint
 
