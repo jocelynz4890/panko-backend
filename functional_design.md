@@ -95,7 +95,7 @@ See our [revised problem framing](problem-framing.md).
 ### Calendar
 
 - purpose: let a person commit planned dishes to specific dates so they can see at a glance what is coming up and avoid forgetting what they intended to cook on a given day.
-- principle: when a person decides they want to make a particular dish on a specific day, they create a calendar entry that links that plan to the chosen date. As days pass, they look at the calendar to see which dishes are scheduled on upcoming dates and adjust entries when plans change by moving, updating, or deleting them. After they complete a planned dish on its day, they can mark the corresponding entry as done or clear it, so that the calendar remains an accurate view of what is still planned rather than a log of past events.
+- principle: when a person decides they want to make a particular dish on a specific day, they create a calendar entry that links that plan to the chosen date.
 - state:
   - a set of ScheduledRecipes
     - a `user` of type `User`
@@ -117,42 +117,31 @@ See our [revised problem framing](problem-framing.md).
 
 ### sync validateCreateBook
 **When** `Request.createBook(user, token, name)`\
-**Then** `Authentication.validateToken(user, token)`
-
-
-### sync createBook
-**When** `Request.createBook(user, token, name)`
-`Authentication.validateToken(user, token): (user: User)`\
+**Where** `Authentication.validateToken(user,token)` is True\
 **Then** `RecipeBook.createRecipeBook(user, name)`
-
-**Note:** These two syncs are an example of basic authentication check. All other actions that require user authentication will follow the same format.
-
 ----
 ### sync createNewRecipe
 **When** `Request.createNewRecipe(user, token, name, description, book)`
-`Authentication.validateToken(user, token): (user: User)`\
+**Where**`Authentication.validateToken(user, token)` is True\
 **Then** `Recipe.createRecipe(user, name)`
 
 ### sync addNewRecipeToBook
-**When** `Request.createNewRecipe(user, token, name, description, book)`
-`Authentication.validateToken(user, token): (user: User)`
+**When** `Request.createNewRecipe(user, token, name, description, book)`\
 `Recipe.createRecipe(user, name): (recipe: Recipe)`\
 **Then** `RecipeBook.addRecipeToBook(recipe, book)`
-
-**Note:** Multistep process: authenticate, create recipe, then add to specified book
 
 ---
 
 ### sync removeSnapshotFromRecipe
 **When** `Request.removeSnapshot(user, token, snapshot, recipe)`\
-`Authentication.validateToken(user,token):(user:User)`\
+`Authentication.validateToken(user,token)`\
 `Snapshots.deleteSnapshot(snapshot): (snapshot: Snapshot)`\
 **Then** `Recipes.removeSnapshot(snapshot: snapshot, recipe: snapshot.recipe)`
 
 
 ### sync removeSnapshotFromCalendar
 **When** `Request.removeSnapshot(user, token, snapshot, recipe)`\
-`Authentication.validateToken(user,token):(user:User)`\
+**Where** `Authentication.validateToken(user,token)` is True\
 **Then** `Calendar.deleteAllScheduledRecipesWithSnapshot(snapshot: snapshot)`
 
 **Note:** Clean up calendar entries with given snapshot when snapshot is deleted
@@ -160,13 +149,13 @@ See our [revised problem framing](problem-framing.md).
 ---
 ### sync removeRecipeFromBook
 **When** `Request.removeRecipe(user, token, recipe, book)`\
-`Authentication.validateToken(user,token):(user:User)`\
+`Authentication.validateToken`\
 `Recipe.deleteRecipe(recipe): (recipe: Recipe)`\
 **Then** `RecipeBook.removeRecipeFromBook(recipe: Recipe, book: RecipeBook)`
 
 ### sync deleteAllSnapshotsFromRecipe
 **When** `Request.removeRecipe(user, token, recipe, book)`\
-`Authentication.validateToken(user,token):(user:User)`\
+`Authentication.validateToken(user,token):`\
 `Recipe.deleteRecipe(recipe): (recipe: Recipe)`\
 **Then** `Snapshot.deleteAllSnapshotsForRecipe(recipe:Recipe)`
 
@@ -188,6 +177,12 @@ The user opens the app feeling overwhelmed by what to cook and starts by opening
 
 The design uses four concepts that together support iterative cooking and reduce decision fatigue. **RecipeBook** lets a user group dishes into named collections with a table of contents, so when they feel stuck about what to cook they can open a focused book instead of scanning their entire history. Each entry leads to a **Recipe**, which is the stable anchor for a dish and holds its core description plus a set of associated snapshots. **Snapshot** records a single attempt at a dish, with date, ingredients/instructions actually used, photos, and notes. Over time, this gives each recipe a timeline of concrete iterations that the user can review before cooking again. The **Calendar** links planned cooking to specific dates by assigning snapshots (planned or existing) to days, so the user can plan future iterations in advance and simply follow what is on the calendar rather than re-deciding from scratch every night. In the main journey, the user opens a recipe book to narrow options, picks a recipe, reviews its snapshots to choose how to make it, records a new snapshot after cooking, and then uses the calendar to schedule upcoming dishes, gradually building a structured, revisitable history of their cooking. The design also connects to the ethical concerns raised in the analysis. RecipeBooks and recipe-level organization help manage the accumulation of many dishes over time, so users can work within smaller, meaningful subsets instead of facing an overwhelming list. The Calendar supports lifestyle changes toward more planned home cooking by letting users set up future attempts in advance, which lowers day-to-day friction. Sustainability benefits can emerge from repeatedly iterating on existing recipes and planning meals ahead rather than chasing constant novelty.
 
-## 🚀 Development Plan
+## 🚀 Initial Development Plan
 <img src="media/dev_plan_1.png" style="width:100%;" />
 <img src="media/dev_plan_2.png" style="width:100%;" />
+
+
+## 🅰️ **Updated** Development Plan: Alpha Checkpoint
+
+<img src="media/alpha_plan_1.png" style="width:100%;" />
+<img src="media/alpha_plan_2.png" style="width:100%;" />
