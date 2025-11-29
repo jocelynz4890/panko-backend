@@ -11,13 +11,16 @@
 **Description:** Registers a new user with a username and password.
 
 **Requirements:**
+
 - No user exists with the given `username`.
 
 **Effects:**
+
 - Creates and stores a new User with the given `username` and a hashed version of the `password`.
 - Returns the new user ID.
 
 **Request Body:**
+
 ```json
 {
   "username": "string",
@@ -26,6 +29,7 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {
   "user": "string (ID)"
@@ -33,6 +37,7 @@
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -41,17 +46,19 @@
 
 ### POST /api/Authentication/authenticate
 
-**Description:** Authenticates a user and generates a session token.
+**Description:** Authenticates a user with username and password.
 
 **Requirements:**
+
 - A user must exist with the given `username`.
 
 **Effects:**
-- If the `username` exists and the `password` matches, generates a session token and updates the user state.
-- Returns the user ID and the token.
+
+- If the `username` exists and the `password` matches, returns the user ID.
 - If validation fails, access is denied.
 
 **Request Body:**
+
 ```json
 {
   "username": "string",
@@ -60,40 +67,7 @@
 ```
 
 **Success Response Body (Action):**
-```json
-{
-  "user": "string (ID)",
-  "token": "string"
-}
-```
 
-**Error Response Body:**
-```json
-{
-  "error": "string"
-}
-```
-
-### POST /api/Authentication/validateToken
-
-**Description:** Verifies that a user is currently authenticated with a valid token.
-
-**Requirements:**
-- The `user` exists.
-- The `token` matches the stored token for that user.
-
-**Effects:**
-- Returns the user ID if authenticated.
-
-**Request Body:**
-```json
-{
-  "user": "string (ID)",
-  "token": "string"
-}
-```
-
-**Success Response Body (Action):**
 ```json
 {
   "user": "string (ID)"
@@ -101,6 +75,80 @@
 ```
 
 **Error Response Body:**
+
+```json
+{
+  "error": "string"
+}
+```
+
+### POST /api/Authentication/createSession
+
+**Description:** Creates a new session for an authenticated user.
+
+**Requirements:**
+
+- The `user` must exist.
+
+**Effects:**
+
+- Creates a new session with a random token for the user.
+- Returns the session token.
+
+**Request Body:**
+
+```json
+{
+  "user": "string (ID)"
+}
+```
+
+**Success Response Body (Action):**
+
+```json
+{
+  "token": "string"
+}
+```
+
+**Error Response Body:**
+
+```json
+{
+  "error": "string"
+}
+```
+
+### POST /api/Authentication/validateSession
+
+**Description:** Validates a session token and returns the associated user.
+
+**Requirements:**
+
+- A session must exist with the given `token`.
+
+**Effects:**
+
+- Returns the user ID associated with the session if valid.
+
+**Request Body:**
+
+```json
+{
+  "token": "string"
+}
+```
+
+**Success Response Body (Action):**
+
+```json
+{
+  "user": "string (ID)"
+}
+```
+
+**Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -122,13 +170,16 @@
 **Description:** Schedules a specific recipe snapshot for a specific date.
 
 **Requirements:**
+
 - The `snapshot` must exist.
 
 **Effects:**
+
 - Adds a new ScheduledRecipe associating the `user`, `snapshot`, and `date`.
 - Returns the new ScheduledRecipe ID.
 
 **Request Body:**
+
 ```json
 {
   "user": "string (ID)",
@@ -138,6 +189,7 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {
   "scheduledRecipe": "string (ID)"
@@ -145,6 +197,7 @@
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -156,12 +209,15 @@
 **Description:** Removes a scheduled recipe entry from the calendar.
 
 **Requirements:**
+
 - The `scheduledRecipe` must exist.
 
 **Effects:**
+
 - Removes the identified ScheduledRecipe from the state.
 
 **Request Body:**
+
 ```json
 {
   "scheduledRecipe": "string (ID)"
@@ -169,11 +225,13 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {}
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -185,12 +243,15 @@
 **Description:** Removes all calendar entries associated with a specific snapshot.
 
 **Requirements:**
+
 - True (Always allowed).
 
 **Effects:**
+
 - Finds all ScheduledRecipes associated with the given `snapshot` and deletes them.
 
 **Request Body:**
+
 ```json
 {
   "snapshot": "string (ID)"
@@ -198,28 +259,33 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {}
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
 }
 ```
 
-### POST /api/Calendar/_getScheduledRecipes
+### POST /api/Calendar/\_getScheduledRecipes
 
 **Description:** Retrieves all scheduled recipes for a specific user.
 
 **Requirements:**
+
 - True.
 
 **Effects:**
+
 - Returns all scheduled recipes for the given `user`.
 
 **Request Body:**
+
 ```json
 {
   "user": "string (ID)"
@@ -227,6 +293,7 @@
 ```
 
 **Success Response Body (Query):**
+
 ```json
 [
   {
@@ -240,6 +307,7 @@
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -261,13 +329,16 @@
 **Description:** Creates a new recipe container.
 
 **Requirements:**
+
 - The `user` must exist.
 
 **Effects:**
+
 - Creates a new recipe with the given `name`, `description`, and owner `user`.
 - Initializes an empty set of snapshots.
 
 **Request Body:**
+
 ```json
 {
   "user": "string (ID)",
@@ -277,6 +348,7 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {
   "recipe": "string (ID)"
@@ -284,6 +356,7 @@
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -295,12 +368,15 @@
 **Description:** Updates the metadata of a recipe.
 
 **Requirements:**
+
 - The `recipe` must exist.
 
 **Effects:**
+
 - Updates the `name` and `description` of the recipe.
 
 **Request Body:**
+
 ```json
 {
   "recipe": "string (ID)",
@@ -310,6 +386,7 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {
   "recipe": "string (ID)"
@@ -317,6 +394,7 @@
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -328,12 +406,15 @@
 **Description:** Deletes a recipe and its associated metadata.
 
 **Requirements:**
+
 - The `recipe` must exist.
 
 **Effects:**
+
 - Deletes the given recipe.
 
 **Request Body:**
+
 ```json
 {
   "recipe": "string (ID)"
@@ -341,6 +422,7 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {
   "recipe": "string (ID)"
@@ -348,6 +430,7 @@
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -359,12 +442,15 @@
 **Description:** Links a snapshot to a recipe.
 
 **Requirements:**
+
 - The `recipe` and `snapshot` must exist.
 
 **Effects:**
+
 - Adds the `snapshot` to the recipe's set of snapshots.
 
 **Request Body:**
+
 ```json
 {
   "snapshot": "string (ID)",
@@ -373,11 +459,13 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {}
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -389,13 +477,16 @@
 **Description:** Unlinks a snapshot from a recipe.
 
 **Requirements:**
+
 - The `recipe` and `snapshot` must exist.
 
 **Effects:**
+
 - Removes the `snapshot` from the recipe's set of snapshots.
 - If the snapshot was the default, it is unset.
 
 **Request Body:**
+
 ```json
 {
   "snapshot": "string (ID)",
@@ -404,11 +495,13 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {}
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -420,12 +513,15 @@
 **Description:** Sets a specific snapshot as the primary representation of the recipe.
 
 **Requirements:**
+
 - The `snapshot` must exist and already be linked to the `recipe`.
 
 **Effects:**
+
 - Sets `defaultSnapshot` of the recipe to the given `snapshot`.
 
 **Request Body:**
+
 ```json
 {
   "snapshot": "string (ID)",
@@ -434,28 +530,33 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {}
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
 }
 ```
 
-### POST /api/Recipes/_getRecipe
+### POST /api/Recipes/\_getRecipe
 
 **Description:** Retrieves the full details of a specific recipe.
 
 **Requirements:**
+
 - The `recipe` must exist.
 
 **Effects:**
+
 - Returns the full state of the recipe including its name, description, snapshots list, and default snapshot.
 
 **Request Body:**
+
 ```json
 {
   "recipe": "string (ID)"
@@ -463,6 +564,7 @@
 ```
 
 **Success Response Body (Query):**
+
 ```json
 [
   {
@@ -477,6 +579,7 @@
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -498,13 +601,16 @@
 **Description:** Creates a new record of a cooking attempt.
 
 **Requirements:**
+
 - `ranking` must be between 1 and 5.
 
 **Effects:**
+
 - Creates a new snapshot with the provided ingredients, pictures (URLs), date, instructions, note, ranking, and associated recipe.
 - Returns the new snapshot ID.
 
 **Request Body:**
+
 ```json
 {
   "user": "string (ID)",
@@ -520,6 +626,7 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {
   "snapshot": "string (ID)"
@@ -527,6 +634,7 @@
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -538,13 +646,16 @@
 **Description:** Edits an existing cooking attempt record.
 
 **Requirements:**
+
 - The `snapshot` must exist.
 - `ranking` (if provided) must be between 1 and 5.
 
 **Effects:**
+
 - Updates the snapshot details with the given arguments.
 
 **Request Body:**
+
 ```json
 {
   "snapshot": "string (ID)",
@@ -559,6 +670,7 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {
   "snapshot": "string (ID)"
@@ -566,6 +678,7 @@
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -577,12 +690,15 @@
 **Description:** Deletes a specific snapshot.
 
 **Requirements:**
+
 - The `snapshot` must exist.
 
 **Effects:**
+
 - Deletes the given snapshot.
 
 **Request Body:**
+
 ```json
 {
   "snapshot": "string (ID)"
@@ -590,6 +706,7 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {
   "snapshot": "string (ID)"
@@ -597,6 +714,7 @@
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -608,12 +726,15 @@
 **Description:** Deletes all snapshots belonging to a specific recipe.
 
 **Requirements:**
+
 - True.
 
 **Effects:**
+
 - Deletes all snapshots associated with the given `recipe` ID.
 
 **Request Body:**
+
 ```json
 {
   "recipe": "string (ID)"
@@ -621,28 +742,33 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {}
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
 }
 ```
 
-### POST /api/Snapshot/_getSnapshots
+### POST /api/Snapshot/\_getSnapshots
 
 **Description:** Retrieves all snapshots for a specific recipe.
 
 **Requirements:**
+
 - True.
 
 **Effects:**
+
 - Returns the set of all snapshots associated with the recipe.
 
 **Request Body:**
+
 ```json
 {
   "recipe": "string (ID)"
@@ -650,6 +776,7 @@
 ```
 
 **Success Response Body (Query):**
+
 ```json
 [
   {
@@ -668,6 +795,7 @@
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -689,14 +817,17 @@
 **Description:** Creates a new recipe book collection.
 
 **Requirements:**
+
 - The `user` must exist.
 
 **Effects:**
+
 - Creates a new recipe book `b` with the given name and owner.
 - Initializes with an empty set of recipes.
 - Returns the book ID.
 
 **Request Body:**
+
 ```json
 {
   "user": "string (ID)",
@@ -705,6 +836,7 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {
   "book": "string (ID)"
@@ -712,6 +844,7 @@
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -723,12 +856,15 @@
 **Description:** Renames a recipe book.
 
 **Requirements:**
+
 - The `book` must exist.
 
 **Effects:**
+
 - Sets the name of the `book` to `newName`.
 
 **Request Body:**
+
 ```json
 {
   "book": "string (ID)",
@@ -737,11 +873,13 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {}
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -753,12 +891,15 @@
 **Description:** Adds a recipe entry to the book.
 
 **Requirements:**
+
 - The `recipe` and `book` must exist.
 
 **Effects:**
+
 - Adds the `recipe` to the set of recipes in the `book`.
 
 **Request Body:**
+
 ```json
 {
   "recipe": "string (ID)",
@@ -767,11 +908,13 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {}
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -783,12 +926,15 @@
 **Description:** Removes a recipe entry from the book.
 
 **Requirements:**
+
 - The `book` must exist.
 
 **Effects:**
+
 - Removes the `recipe` from the set of recipes in the `book`.
 
 **Request Body:**
+
 ```json
 {
   "recipe": "string (ID)",
@@ -797,11 +943,13 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {}
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
@@ -813,12 +961,15 @@
 **Description:** Deletes the entire recipe book.
 
 **Requirements:**
+
 - The `book` must exist.
 
 **Effects:**
+
 - Removes the `book` from the set of RecipeBooks.
 
 **Request Body:**
+
 ```json
 {
   "book": "string (ID)"
@@ -826,28 +977,33 @@
 ```
 
 **Success Response Body (Action):**
+
 ```json
 {}
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
 }
 ```
 
-### POST /api/RecipeBook/_getBooks
+### POST /api/RecipeBook/\_getBooks
 
 **Description:** Retrieves all recipe books owned by a user.
 
 **Requirements:**
+
 - The `user` must exist.
 
 **Effects:**
+
 - Returns all books belonging to the user.
 
 **Request Body:**
+
 ```json
 {
   "user": "string (ID)"
@@ -855,6 +1011,7 @@
 ```
 
 **Success Response Body (Query):**
+
 ```json
 [
   {
@@ -867,23 +1024,27 @@
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
 }
 ```
 
-### POST /api/RecipeBook/_getBook
+### POST /api/RecipeBook/\_getBook
 
 **Description:** Retrieves the details of a specific recipe book.
 
 **Requirements:**
+
 - The `book` must exist.
 
 **Effects:**
+
 - Returns the specific book document.
 
 **Request Body:**
+
 ```json
 {
   "book": "string (ID)"
@@ -891,6 +1052,7 @@
 ```
 
 **Success Response Body (Query):**
+
 ```json
 [
   {
@@ -903,7 +1065,9 @@
 ```
 
 **Error Response Body:**
+
 ```json
 {
   "error": "string"
 }
+```
