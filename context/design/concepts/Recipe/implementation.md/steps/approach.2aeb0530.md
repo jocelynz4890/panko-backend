@@ -1,6 +1,6 @@
 ---
-timestamp: 'Sun Nov 23 2025 13:27:29 GMT-0500 (Eastern Standard Time)'
-parent: '[[..\20251123_132729.ca8461a4.md]]'
+timestamp: 'Sun Nov 23 2025 13:26:42 GMT-0500 (Eastern Standard Time)'
+parent: '[[../20251123_132642.a8dee6cc.md]]'
 content_id: 2aeb0530e6f427e84322042f525b0bc182bc99368de5951d3dcda7af00972d41
 ---
 

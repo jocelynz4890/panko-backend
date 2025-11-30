@@ -2,11 +2,11 @@
 
 [@calendar-concept-code](../Calendar/implementation.md)
 
+[@dishes-concept-code](../Dishes/implementation.md)
+
 [@recipe-concept-code](../Recipe/implementation.md)
 
 [@recipebook-concept-code](../RecipeBook/implementation.md)
-
-[@snapshot-concept-code](../Snapshot/implementation.md)
 
 [@api-extraction-from-code](../../tools/api-extraction-from-code.md)
 
@@ -134,22 +134,22 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 
 ## API Endpoints
 
-### POST /api/Calendar/assignSnapshotToDate
+### POST /api/Calendar/assignRecipeToDate
 
-**Description:** Schedules a specific recipe snapshot for a specific date.
+**Description:** Schedules a specific recipe attempt for a specific date.
 
 **Requirements:**
-- The `snapshot` must exist.
+- The `recipe` must exist.
 
 **Effects:**
-- Adds a new ScheduledRecipe associating the `user`, `snapshot`, and `date`.
+- Adds a new ScheduledRecipe associating the `user`, `recipe`, and `date`.
 - Returns the new ScheduledRecipe ID.
 
 **Request Body:**
 ```json
 {
   "user": "string (ID)",
-  "snapshot": "string (ID)",
+  "recipe": "string (ID)",
   "date": "string (Date)"
 }
 ```
@@ -197,20 +197,20 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 }
 ```
 
-### POST /api/Calendar/deleteAllScheduledRecipesWithSnapshot
+### POST /api/Calendar/deleteAllScheduledRecipesWithRecipe
 
-**Description:** Removes all calendar entries associated with a specific snapshot.
+**Description:** Removes all calendar entries associated with a specific recipe attempt.
 
 **Requirements:**
 - True (Always allowed).
 
 **Effects:**
-- Finds all ScheduledRecipes associated with the given `snapshot` and deletes them.
+- Finds all ScheduledRecipes associated with the given `recipe` and deletes them.
 
 **Request Body:**
 ```json
 {
-  "snapshot": "string (ID)"
+  "recipe": "string (ID)"
 }
 ```
 
@@ -249,7 +249,7 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
   {
     "scheduledRecipe": {
       "scheduledRecipe": "string (ID)",
-      "snapshot": "string (ID)",
+      "recipe": "string (ID)",
       "date": "string (Date)"
     }
   }
@@ -265,7 +265,7 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 
 ---
 
-# API Specification: Recipes Concept
+# API Specification: Dishes Concept
 
 **Purpose:** Provide a stable identity and high-level categorization for a dish, together with a history of its recorded attempts.
 
@@ -273,16 +273,16 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 
 ## API Endpoints
 
-### POST /api/Recipes/createRecipe
+### POST /api/Dishes/createDish
 
-**Description:** Creates a new recipe container.
+**Description:** Creates a new dish container.
 
 **Requirements:**
 - The `user` must exist.
 
 **Effects:**
-- Creates a new recipe with the given `name`, `description`, and owner `user`.
-- Initializes an empty set of snapshots.
+- Creates a new dish with the given `name`, `description`, and owner `user`.
+- Initializes an empty set of recipes.
 
 **Request Body:**
 ```json
@@ -296,7 +296,7 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 **Success Response Body (Action):**
 ```json
 {
-  "recipe": "string (ID)"
+  "dish": "string (ID)"
 }
 ```
 
@@ -307,20 +307,20 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 }
 ```
 
-### POST /api/Recipes/editRecipeName
+### POST /api/Dishes/editDishName
 
-**Description:** Updates the metadata of a recipe.
+**Description:** Updates the metadata of a dish.
 
 **Requirements:**
-- The `recipe` must exist.
+- The `dish` must exist.
 
 **Effects:**
-- Updates the `name` and `description` of the recipe.
+- Updates the `name` and `description` of the dish.
 
 **Request Body:**
 ```json
 {
-  "recipe": "string (ID)",
+  "dish": "string (ID)",
   "newName": "string",
   "description": "string"
 }
@@ -329,7 +329,7 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 **Success Response Body (Action):**
 ```json
 {
-  "recipe": "string (ID)"
+  "dish": "string (ID)"
 }
 ```
 
@@ -340,27 +340,27 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 }
 ```
 
-### POST /api/Recipes/deleteRecipe
+### POST /api/Dishes/deleteDish
 
-**Description:** Deletes a recipe and its associated metadata.
+**Description:** Deletes a dish and its associated metadata.
 
 **Requirements:**
-- The `recipe` must exist.
+- The `dish` must exist.
 
 **Effects:**
-- Deletes the given recipe.
+- Deletes the given dish.
 
 **Request Body:**
 ```json
 {
-  "recipe": "string (ID)"
+  "dish": "string (ID)"
 }
 ```
 
 **Success Response Body (Action):**
 ```json
 {
-  "recipe": "string (ID)"
+  "dish": "string (ID)"
 }
 ```
 
@@ -371,52 +371,21 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 }
 ```
 
-### POST /api/Recipes/addSnapshot
+### POST /api/Dishes/addRecipe
 
-**Description:** Links a snapshot to a recipe.
+**Description:** Links a recorded recipe attempt to a dish.
 
 **Requirements:**
-- The `recipe` and `snapshot` must exist.
+- The `dish` and `recipe` must exist.
 
 **Effects:**
-- Adds the `snapshot` to the recipe's set of snapshots.
+- Adds the `recipe` to the dish's set of recipes.
 
 **Request Body:**
 ```json
 {
-  "snapshot": "string (ID)",
-  "recipe": "string (ID)"
-}
-```
-
-**Success Response Body (Action):**
-```json
-{}
-```
-
-**Error Response Body:**
-```json
-{
-  "error": "string"
-}
-```
-
-### POST /api/Recipes/removeSnapshot
-
-**Description:** Unlinks a snapshot from a recipe.
-
-**Requirements:**
-- The `recipe` and `snapshot` must exist.
-
-**Effects:**
-- Removes the `snapshot` from the recipe's set of snapshots.
-- If the snapshot was the default, it is unset.
-
-**Request Body:**
-```json
-{
-  "snapshot": "string (ID)",
-  "recipe": "string (ID)"
+  "recipe": "string (ID)",
+  "dish": "string (ID)"
 }
 ```
 
@@ -432,21 +401,22 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 }
 ```
 
-### POST /api/Recipes/setDefaultSnapshot
+### POST /api/Dishes/removeRecipe
 
-**Description:** Sets a specific snapshot as the primary representation of the recipe.
+**Description:** Unlinks a recorded recipe attempt from a dish.
 
 **Requirements:**
-- The `snapshot` must exist and already be linked to the `recipe`.
+- The `dish` and `recipe` must exist.
 
 **Effects:**
-- Sets `defaultSnapshot` of the recipe to the given `snapshot`.
+- Removes the `recipe` from the dish's set of recipes.
+- If the recipe was the default, it is unset.
 
 **Request Body:**
 ```json
 {
-  "snapshot": "string (ID)",
-  "recipe": "string (ID)"
+  "recipe": "string (ID)",
+  "dish": "string (ID)"
 }
 ```
 
@@ -462,20 +432,50 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 }
 ```
 
-### POST /api/Recipes/_getRecipe
+### POST /api/Dishes/setDefaultRecipe
 
-**Description:** Retrieves the full details of a specific recipe.
+**Description:** Sets a specific recipe attempt as the primary representation of the dish.
 
 **Requirements:**
-- The `recipe` must exist.
+- The `recipe` must exist and already be linked to the `dish`.
 
 **Effects:**
-- Returns the full state of the recipe including its name, description, snapshots list, and default snapshot.
+- Sets `defaultRecipe` of the dish to the given `recipe`.
 
 **Request Body:**
 ```json
 {
-  "recipe": "string (ID)"
+  "recipe": "string (ID)",
+  "dish": "string (ID)"
+}
+```
+
+**Success Response Body (Action):**
+```json
+{}
+```
+
+**Error Response Body:**
+```json
+{
+  "error": "string"
+}
+```
+
+### POST /api/Dishes/_getDish
+
+**Description:** Retrieves the full details of a specific dish.
+
+**Requirements:**
+- The `dish` must exist.
+
+**Effects:**
+- Returns the full state of the dish including its name, description, recipes list, and default recipe.
+
+**Request Body:**
+```json
+{
+  "dish": "string (ID)"
 }
 ```
 
@@ -487,8 +487,8 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
     "owner": "string (ID)",
     "name": "string",
     "description": "string",
-    "snapshots": ["string (ID)"],
-    "defaultSnapshot": "string (ID) (optional)"
+    "recipes": ["string (ID)"],
+    "defaultRecipe": "string (ID) (optional)"
   }
 ]
 ```
@@ -502,7 +502,7 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 
 ---
 
-# API Specification: Snapshot Concept
+# API Specification: Recipe Concept
 
 **Purpose:** Record individual attempts at preparing a dish, including context and outcome, so that the cook can compare attempts, learn from variations, and see how their results change over time.
 
@@ -510,7 +510,7 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 
 ## API Endpoints
 
-### POST /api/Snapshot/createSnapshot
+### POST /api/Recipe/createRecipe
 
 **Description:** Creates a new record of a cooking attempt.
 
@@ -518,8 +518,8 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 - `ranking` must be between 1 and 5.
 
 **Effects:**
-- Creates a new snapshot with the provided ingredients, pictures (URLs), date, instructions, note, ranking, and associated recipe.
-- Returns the new snapshot ID.
+- Creates a new recipe attempt with the provided ingredients, pictures (URLs), date, instructions, note, ranking, and associated dish.
+- Returns the new recipe ID.
 
 **Request Body:**
 ```json
@@ -532,14 +532,14 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
   "instructions": "string",
   "note": "string",
   "ranking": "number",
-  "recipe": "string (ID)"
+  "dish": "string (ID)"
 }
 ```
 
 **Success Response Body (Action):**
 ```json
 {
-  "snapshot": "string (ID)"
+  "recipe": "string (ID)"
 }
 ```
 
@@ -550,21 +550,21 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 }
 ```
 
-### POST /api/Snapshot/editSnapshot
+### POST /api/Recipe/editRecipe
 
 **Description:** Edits an existing cooking attempt record.
 
 **Requirements:**
-- The `snapshot` must exist.
+- The `recipe` must exist.
 - `ranking` (if provided) must be between 1 and 5.
 
 **Effects:**
-- Updates the snapshot details with the given arguments.
+- Updates the recipe details with the given arguments.
 
 **Request Body:**
 ```json
 {
-  "snapshot": "string (ID)",
+  "recipe": "string (ID)",
   "ingredientsList": "string",
   "subname": "string",
   "pictures": ["string (URL/Path)"],
@@ -578,7 +578,7 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 **Success Response Body (Action):**
 ```json
 {
-  "snapshot": "string (ID)"
+  "recipe": "string (ID)"
 }
 ```
 
@@ -589,27 +589,27 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 }
 ```
 
-### POST /api/Snapshot/deleteSnapshot
+### POST /api/Recipe/deleteRecipe
 
-**Description:** Deletes a specific snapshot.
+**Description:** Deletes a specific recipe attempt.
 
 **Requirements:**
-- The `snapshot` must exist.
+- The `recipe` must exist.
 
 **Effects:**
-- Deletes the given snapshot.
+- Deletes the given recipe attempt.
 
 **Request Body:**
 ```json
 {
-  "snapshot": "string (ID)"
+  "recipe": "string (ID)"
 }
 ```
 
 **Success Response Body (Action):**
 ```json
 {
-  "snapshot": "string (ID)"
+  "recipe": "string (ID)"
 }
 ```
 
@@ -620,20 +620,20 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 }
 ```
 
-### POST /api/Snapshot/deleteAllSnapshotsForRecipe
+### POST /api/Recipe/deleteAllRecipesForDish
 
-**Description:** Deletes all snapshots belonging to a specific recipe.
+**Description:** Deletes all recipe attempts belonging to a specific dish.
 
 **Requirements:**
 - True.
 
 **Effects:**
-- Deletes all snapshots associated with the given `recipe` ID.
+- Deletes all recipes associated with the given `dish` ID.
 
 **Request Body:**
 ```json
 {
-  "recipe": "string (ID)"
+  "dish": "string (ID)"
 }
 ```
 
@@ -649,20 +649,20 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
 }
 ```
 
-### POST /api/Snapshot/_getSnapshots
+### POST /api/Recipe/_getRecipes
 
-**Description:** Retrieves all snapshots for a specific recipe.
+**Description:** Retrieves all recipe attempts for a specific dish.
 
 **Requirements:**
 - True.
 
 **Effects:**
-- Returns the set of all snapshots associated with the recipe.
+- Returns the set of all recipes associated with the dish.
 
 **Request Body:**
 ```json
 {
-  "recipe": "string (ID)"
+  "dish": "string (ID)"
 }
 ```
 
@@ -679,7 +679,7 @@ Prompt: Now, analyze the following Concept Implementations and generate the API 
     "subname": "string",
     "pictures": ["string (URL/Path)"],
     "date": "string (Date)",
-    "recipe": "string (ID)"
+    "dish": "string (ID)"
   }
 ]
 ```

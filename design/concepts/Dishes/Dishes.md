@@ -1,0 +1,29 @@
+# Dish Concept
+
+- purpose: provide a persistent, easy-to-find record for a dish, including its description and the set of recipe attempts that belong to it. A dish acts as the long-term home for everything related to cooking that meal, so a person can quickly recall what it is, what it’s like, and how their experiences with it have evolved over time.
+- principle: Over time, a person creates and maintains dishes as the stable “anchors” for the meals they care about. When they want to track their experience with a dish, they create a dish with a recognizable name and a description that helps them remember what it is. Each time they cook it, they add a new recipe (attempt) to its history, building a chronological record of outcomes, variations, and notes. Later, when deciding what to cook or reflecting on past attempts, they can easily find the dish by name or by browsing, then review its recipes to understand how often they’ve made it, what changes they’ve tried, and how the results have developed. As their understanding or habits change, they can update the dish’s name or description so it remains meaningful and easy to find.
+- state:
+  - a set of `Dish` with
+    - a `name` of type `String`
+    - a `description` of type `String`
+    - a set of `recipes` of type `Recipe`
+    - a `defaultRecipe` of type `Recipe`
+- actions:
+  - createDish (user: User, name: String, description: String):(dish: Dish)
+    - requires: user exists
+    - effect: create a new dish with the given arguments and an empty set of recipes
+  - editDishName(dish: Dish, newName: String, description: String): (dish: Dish)
+    - requires: dish exists
+    - effect: edits the dish with a new name and description
+  - deleteDish (dish: Dish): (dish: Dish)
+    - requires: dish exists
+    - effect: deletes the given dish
+  - addRecipe(recipe: Recipe, dish: Dish)
+    - requires: dish and recipe exist
+    - effects: adds the recipe to the dish’s set of recipes
+  - removeRecipe (recipe: Recipe, dish: Dish)
+    - requires: dish and recipe exist
+    - effect: removes the recipe from the dish’s set of recipes
+  - setDefaultRecipe (recipe: Recipe, dish: Dish)
+    - requires: recipe exists and is in the dish’s set of recipes
+    - effects: sets defaultRecipe of the dish to the given recipe

@@ -5,15 +5,15 @@
 - state:
   - a set of ScheduledRecipes
     - a `user` of type `User`
-    - a `snapshot` of type `Snapshot`
+    - a `recipe` of type `Recipe`
     - a `date` of type `Date`
 - actions:
-  - assignSnapshotToDate(snapshot: Snapshot, date: Date)
-    - requires: snapshot exists
-    - effects: adds snapshot to ScheduledRecipes with given date
+  - assignRecipeToDate(recipe: Recipe, date: Date)
+    - requires: recipe exists
+    - effects: adds recipe to ScheduledRecipes with given date
   - deleteScheduledRecipe(scheduledRecipe: ScheduledRecipe)
     - requires: scheduledRecipe exists
     - effects: deletes the given scheduledRecipe
-  - deleteAllScheduledRecipesWithSnapshot(snapshot:Snapshot)
+  - deleteAllScheduledRecipesWithRecipe(recipe:Recipe)
     - requires: True
-    - effects: finds all ScheduledRecipes associated with the given snapshot and deletes them
+    - effects: finds all ScheduledRecipes associated with the given recipe and deletes them

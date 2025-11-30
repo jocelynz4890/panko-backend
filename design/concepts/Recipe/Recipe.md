@@ -1,29 +1,28 @@
-# Dish Concept
+### Recipe Concept
 
-- purpose: provide a persistent, easy-to-find record for a dish, including its description, and the variations of recipes to make it. A Dish acts as the long-term home for everything related to cooking that dish, so a person can quickly recall what the dish is, what it’s like, and how their experiences with it have evolved over time.
-- principle: Over time, a person creates and maintains Dishes as the stable “anchors” for the recipes they care about. When they want to track their experience with a dish, they create a Dish with a recognizable name and a description that helps them remember what it is. Each time they cook the dish, they add a new snapshot to its history, building a chronological record of outcomes, variations, and notes. Later, when deciding what to cook or reflecting on past attempts, they can easily find the Dish by name or by browsing, then review its recipe iterait to understand how often they’ve made it, what changes they’ve tried, and how the results have developed. As their understanding or habits change, they can update the Dish’s name or description so it remains meaningful and easy to find.
+- purpose: record individual attempts at preparing a dish, including context and outcome, so that the cook can compare attempts, learn from variations, and see how their results change over time.
+- principle: each time a user prepares a dish, they create a new recipe entry that captures when it was made, any photos of the result, notes about what they did (or changed) compared to their usual approach, and how satisfied they were with the outcome. Over many cooking sessions, these recipes accumulate into a chronological history of attempts for that dish. When the user is deciding how to make the dish again, they review the previous recipes to see which variations turned out best and what they want to repeat or avoid, then create a new recipe entry for the latest attempt to extend the history.
 - state:
-  - a set of `Dish`'s' with
-    - a `name` of type `String`
-    - a `description` of type `String`
-    - a set of snapshots of type `Snapshot`
-    - a `defaultSnapshot` of type `Snapshot`
+  - A set of `recipes` with
+    - a `user` of type `User`
+    - an `ingredientsList` of type `String`
+    - an `instructions` of type `String`
+    - a `note` of type `String`
+    - a `ranking` of type `Number`
+    - a `subname` of type `String`
+    - a set of `pictures` of type `FilePath`
+    - a `date` of type `Date`
+    - a `dish` of type `Dish`
 - actions:
-  - createDish (user: User, name: String, description: String):(Dish:Dish)
-    - requires: user exists
-    - effect: create a new Dish with given arguments and an empty set of snapshots
-  - editDishName(Dish: Dish, newName: String, description: String): (Dish: Dish)
-    - requires: Dish exists
-    - effect: edits Dish with new name and description
-  - deleteDish (Dish: Dish): (Dish: Dish)
-    - requires: Dish exists
-    - effect: deletes the given Dish
-  - addSnapshot(snapshot: Snapshot, Dish: Dish)
-    - requires: Dish and snapshot exists
-    - effects: adds the snapshot the set of snapshots
-  - removeSnapshot (snapshot: Snapshot, Dish: Dish)
-    - requires: Dish and snapshot exists
-    - effect: removes the snapshot from the given Dish’s set of snapshots
-  - setDefaultSnapshot (snapshot: Snapshot, Dish: Dish)
-    - requires: snapshot exists and is in Dish’s set of snapshots
-    - effects: sets defaultSnapshot of Dish to given snapshot
+  - createRecipe (ingredientsList: String, subname: String, pictures: Path, date: Date, instructions: String, note: String, ranking: Ranking, dish: Dish): (recipe: Recipe)
+    - requires: ranking is between 1 and 5
+    - effects: creates a new recipe entry with the given arguments
+  - editRecipe (recipe: Recipe, ingredientsList: String, subname: String, pictures: Path, date: Date, instructions: String, note: String, ranking: Ranking):(recipe: Recipe)
+    - requires: recipe exists
+    - effect: updates the recipe with the given edits
+  - deleteRecipe(recipe: Recipe):(recipe: Recipe)
+    - requires: recipe exists
+    - effect: deletes the given recipe entry
+  - deleteAllRecipesForDish(dish: Dish)
+    - requires: True
+    - effect: deletes all recipes associated with the given dish

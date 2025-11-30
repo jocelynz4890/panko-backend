@@ -7,20 +7,20 @@ const PREFIX = "RecipeBook.";
 
 // Generic types mapping
 type User = ID;
-type Recipe = ID;
+type Dish = ID;
 type BookID = ID;
 
 /**
  * State:
  * a set of RecipeBooks with
  *   a user of type User
- *   a recipes set of Recipe
+ *   a dishes set of Dish
  *   a name of type String
  */
 interface RecipeBookDoc {
   _id: BookID;
   user: User;
-  recipes: Recipe[];
+  dishes: Dish[];
   name: string;
 }
 
@@ -35,7 +35,7 @@ export default class RecipeBookConcept {
    * createRecipeBook (user: User, name: String): (book: RecipeBook)
    *
    * **requires** user exists
-   * **effects** creates a new recipe book `b`; sets user of `b` to `user`; sets name of `b` to `name`; sets recipes of `b` to empty; returns `b` as `book`
+   * **effects** creates a new recipe book `b`; sets user of `b` to `user`; sets name of `b` to `name`; sets dishes of `b` to empty; returns `b` as `book`
    */
   async createRecipeBook(
     { user, name }: { user: User; name: string },
@@ -49,7 +49,7 @@ export default class RecipeBookConcept {
       _id: bookID,
       user,
       name,
-      recipes: [],
+      dishes: [],
     };
 
     await this.books.insertOne(doc);
@@ -78,23 +78,22 @@ export default class RecipeBookConcept {
   }
 
   /**
-   * addRecipeToBook (recipe: Recipe, book: RecipeBook)
+   * addDishToBook (dish: Dish, book: RecipeBook)
    *
-   * **requires** `recipe` and `book` exist
-   * **effects** adds `recipe` to the set of recipes in `book`
+   * **requires** `dish` and `book` exist
+   * **effects** adds `dish` to the set of dishes in `book`
    */
-  async addRecipeToBook(
-    { recipe, book }: { recipe: Recipe; book: BookID },
+  async addDishToBook(
+    { dish, book }: { dish: Dish; book: BookID },
   ): Promise<Empty | { error: string }> {
-    if (!recipe) {
-      return { error: "Recipe is required" };
+    if (!dish) {
+      return { error: "Dish is required" };
     }
 
     // We use $addToSet to maintain the "set" property (no duplicates)
-    const result = await this.books.updateOne(
-      { _id: book },
-      { $addToSet: { recipes: recipe } },
-    );
+    const result = await this.books.updateOne({ _id: book }, {
+      $addToSet: { dishes: dish },
+    });
 
     if (result.matchedCount === 0) {
       return { error: "Recipe book not found" };
@@ -104,18 +103,17 @@ export default class RecipeBookConcept {
   }
 
   /**
-   * removeRecipeFromBook (recipe: Recipe, book: RecipeBook)
+   * removeDishFromBook (dish: Dish, book: RecipeBook)
    *
    * **requires** `book` exists
-   * **effects** removes `recipe` from the set of recipes in `book`
+   * **effects** removes `dish` from the set of dishes in `book`
    */
-  async removeRecipeFromBook(
-    { recipe, book }: { recipe: Recipe; book: BookID },
+  async removeDishFromBook(
+    { dish, book }: { dish: Dish; book: BookID },
   ): Promise<Empty | { error: string }> {
-    const result = await this.books.updateOne(
-      { _id: book },
-      { $pull: { recipes: recipe } },
-    );
+    const result = await this.books.updateOne({ _id: book }, {
+      $pull: { dishes: dish },
+    });
 
     if (result.matchedCount === 0) {
       return { error: "Recipe book not found" };

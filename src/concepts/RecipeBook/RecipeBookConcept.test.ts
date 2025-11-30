@@ -9,9 +9,9 @@ Deno.test("--------------- ðŸ“– RecipeBookConcept - Principle and Edge Cases ðŸ“
 
   const alice = "user:Alice" as ID;
   const bob = "user:Bob" as ID;
-  const pastaRecipe = "recipe:Pasta" as ID;
-  const pizzaRecipe = "recipe:Pizza" as ID;
-  const saladRecipe = "recipe:Salad" as ID;
+  const pastaDish = "dish:Pasta" as ID;
+  const pizzaDish = "dish:Pizza" as ID;
+  const saladDish = "dish:Salad" as ID;
 
   await t.step(
     "Test Case #1: Principle - Create, Populate, Rename, Refine, Delete",
@@ -29,27 +29,27 @@ Deno.test("--------------- ðŸ“– RecipeBookConcept - Principle and Edge Cases ðŸ“
       // Verify initial state
       let books = await concept._getBook({ book: bookID });
       assertEquals(books[0].name, "Italian Favorites");
-      assertEquals(books[0].recipes.length, 0);
+      assertEquals(books[0].dishes.length, 0);
 
-      // 2. Add recipes
-      console.log("[1.1] Adding 'Pasta' and 'Pizza' recipes...");
-      const addPastaRes = await concept.addRecipeToBook({
-        recipe: pastaRecipe,
+      // 2. Add dishes
+      console.log("[1.1] Adding 'Pasta' and 'Pizza' dishes...");
+      const addPastaRes = await concept.addDishToBook({
+        dish: pastaDish,
         book: bookID,
       });
-      const addPizzaRes = await concept.addRecipeToBook({
-        recipe: pizzaRecipe,
+      const addPizzaRes = await concept.addDishToBook({
+        dish: pizzaDish,
         book: bookID,
       });
       assertNotEquals("error" in addPastaRes, true);
       assertNotEquals("error" in addPizzaRes, true);
 
-      // Verify recipes added
+      // Verify dishes added
       books = await concept._getBook({ book: bookID });
-      assertEquals(books[0].recipes.includes(pastaRecipe), true);
-      assertEquals(books[0].recipes.includes(pizzaRecipe), true);
-      assertEquals(books[0].recipes.length, 2);
-      console.log("[1.1] Recipes added successfully.");
+      assertEquals(books[0].dishes.includes(pastaDish), true);
+      assertEquals(books[0].dishes.includes(pizzaDish), true);
+      assertEquals(books[0].dishes.length, 2);
+      console.log("[1.1] Dishes added successfully.");
 
       // 3. Rename book
       console.log("[1.2] Renaming book to 'Pasta & More'...");
@@ -63,18 +63,18 @@ Deno.test("--------------- ðŸ“– RecipeBookConcept - Principle and Edge Cases ðŸ“
       assertEquals(books[0].name, "Pasta & More");
       console.log("[1.2] Rename successful.");
 
-      // 4. Remove a recipe
+      // 4. Remove a dish
       console.log("[1.3] Removing 'Pizza' from book...");
-      const removeRes = await concept.removeRecipeFromBook({
-        recipe: pizzaRecipe,
+      const removeRes = await concept.removeDishFromBook({
+        dish: pizzaDish,
         book: bookID,
       });
       assertNotEquals("error" in removeRes, true);
 
       books = await concept._getBook({ book: bookID });
-      assertEquals(books[0].recipes.includes(pizzaRecipe), false);
-      assertEquals(books[0].recipes.includes(pastaRecipe), true);
-      assertEquals(books[0].recipes.length, 1);
+      assertEquals(books[0].dishes.includes(pizzaDish), false);
+      assertEquals(books[0].dishes.includes(pastaDish), true);
+      assertEquals(books[0].dishes.length, 1);
       console.log("[1.3] Removal successful.");
 
       // 5. Delete the book
@@ -96,13 +96,13 @@ Deno.test("--------------- ðŸ“– RecipeBookConcept - Principle and Edge Cases ðŸ“
     });
     const bookID = (createRes as { book: ID }).book;
 
-    // Edge Case: Add duplicate recipe
+    // Edge Case: Add duplicate dish
     console.log("[2] Adding 'Salad' twice to ensure set behavior...");
-    await concept.addRecipeToBook({ recipe: saladRecipe, book: bookID });
-    await concept.addRecipeToBook({ recipe: saladRecipe, book: bookID });
+    await concept.addDishToBook({ dish: saladDish, book: bookID });
+    await concept.addDishToBook({ dish: saladDish, book: bookID });
 
     const books = await concept._getBook({ book: bookID });
-    assertEquals(books[0].recipes.length, 1);
+    assertEquals(books[0].dishes.length, 1);
     console.log("[2] Verified: Salad appears only once.");
 
     // Edge Case: Edit non-existent book

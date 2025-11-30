@@ -12,7 +12,7 @@
 
 # concept: Calendar
 
-**concept** Calendar [User, Snapshot]
+**concept** Calendar [User, Recipe]
 
 **purpose** let a person commit planned dishes to specific dates so they can see at a glance what is coming up and avoid forgetting what they intended to cook on a given day.
 
@@ -21,24 +21,24 @@
 **state**
 a set of ScheduledRecipes with
   a user User
-  a snapshot Snapshot
+  a recipe Recipe
   a date Date
 
 **actions**
-assignSnapshotToDate (user: User, snapshot: Snapshot, date: Date): (scheduledRecipe: ScheduledRecipe)
-  **requires** snapshot exists
-  **effects** adds a new ScheduledRecipe to the state associating the user, snapshot, and date; returns the new ID
+assignRecipeToDate (user: User, recipe: Recipe, date: Date): (scheduledRecipe: ScheduledRecipe)
+  **requires** recipe exists
+  **effects** adds a new ScheduledRecipe to the state associating the user, recipe, and date; returns the new ID
 
 deleteScheduledRecipe (scheduledRecipe: ScheduledRecipe)
   **requires** scheduledRecipe exists
   **effects** removes the identified ScheduledRecipe from the state
 
-deleteAllScheduledRecipesWithSnapshot (snapshot: Snapshot)
+deleteAllScheduledRecipesWithRecipe (recipe: Recipe)
   **requires** true
-  **effects** removes all ScheduledRecipes associated with the given snapshot
+  **effects** removes all ScheduledRecipes associated with the given recipe
 
 **queries**
-_getScheduledRecipes (user: User): (scheduledRecipe: {scheduledRecipe: ScheduledRecipe, snapshot: Snapshot, date: Date})
+_getScheduledRecipes (user: User): (scheduledRecipe: {scheduledRecipe: ScheduledRecipe, recipe: Recipe, date: Date})
   **requires** true
   **effects** returns all scheduled recipes for the given user
 
@@ -53,19 +53,19 @@ const PREFIX = "Calendar.";
 
 // Generic Types
 type User = ID;
-type Snapshot = ID;
+type Recipe = ID;
 type ScheduledRecipe = ID;
 
 /**
  * a set of ScheduledRecipes with
  *   a user User
- *   a snapshot Snapshot
+ *   a recipe Recipe
  *   a date Date
  */
 interface ScheduledRecipes {
   _id: ScheduledRecipe;
   user: User;
-  snapshot: Snapshot;
+  recipe: Recipe;
   date: Date;
 }
 
@@ -77,26 +77,26 @@ export default class CalendarConcept {
   }
 
   /**
-   * assignSnapshotToDate (user: User, snapshot: Snapshot, date: Date): (scheduledRecipe: ScheduledRecipe)
+   * assignRecipeToDate (user: User, recipe: Recipe, date: Date): (scheduledRecipe: ScheduledRecipe)
    *
-   * **requires** snapshot exists
+   * **requires** recipe exists
    *
-   * **effects** adds a new ScheduledRecipe to the state associating the user, snapshot, and date; returns the new ID
+   * **effects** adds a new ScheduledRecipe to the state associating the user, recipe, and date; returns the new ID
    */
-  async assignSnapshotToDate(
-    { user, snapshot, date }: { user: User; snapshot: Snapshot; date: Date },
+  async assignRecipeToDate(
+    { user, recipe, date }: { user: User; recipe: Recipe; date: Date },
   ): Promise<{ scheduledRecipe: ScheduledRecipe } | { error: string }> {
     const _id = freshID();
     try {
       await this.scheduledRecipes.insertOne({
         _id,
         user,
-        snapshot,
+        recipe,
         date,
       });
       return { scheduledRecipe: _id };
     } catch (e) {
-      return { error: `Could not assign snapshot to date: ${e}` };
+      return { error: `Could not assign recipe to date: ${e}` };
     }
   }
 
@@ -119,25 +119,25 @@ export default class CalendarConcept {
   }
 
   /**
-   * deleteAllScheduledRecipesWithSnapshot (snapshot: Snapshot)
+   * deleteAllScheduledRecipesWithRecipe (recipe: Recipe)
    *
    * **requires** true
    *
-   * **effects** finds all ScheduledRecipes associated with the given snapshot and deletes them
+   * **effects** finds all ScheduledRecipes associated with the given recipe and deletes them
    */
-  async deleteAllScheduledRecipesWithSnapshot(
-    { snapshot }: { snapshot: Snapshot },
+  async deleteAllScheduledRecipesWithRecipe(
+    { recipe }: { recipe: Recipe },
   ): Promise<Empty | { error: string }> {
     try {
-      await this.scheduledRecipes.deleteMany({ snapshot });
+      await this.scheduledRecipes.deleteMany({ recipe });
       return {};
     } catch (e) {
-      return { error: `Could not delete scheduled recipes for snapshot: ${e}` };
+      return { error: `Could not delete scheduled recipes for recipe: ${e}` };
     }
   }
 
   /**
-   * _getScheduledRecipes (user: User): (scheduledRecipe: {scheduledRecipe: ScheduledRecipe, snapshot: Snapshot, date: Date})
+   * _getScheduledRecipes (user: User): (scheduledRecipe: {scheduledRecipe: ScheduledRecipe, recipe: Recipe, date: Date})
    *
    * **requires** true
    *
@@ -149,18 +149,18 @@ export default class CalendarConcept {
     Array<{
       scheduledRecipe: {
         scheduledRecipe: ScheduledRecipe;
-        snapshot: Snapshot;
+        recipe: Recipe;
         date: Date;
       };
     }>
   > {
     const recipes = await this.scheduledRecipes.find({ user }).toArray();
-    
+
     // Map internal state to output format
     return recipes.map((r) => ({
       scheduledRecipe: {
         scheduledRecipe: r._id,
-        snapshot: r.snapshot,
+        recipe: r.recipe,
         date: r.date,
       },
     }));
