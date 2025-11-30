@@ -38,6 +38,8 @@ Sunday, November 30
 - [TODO] For calendar events, implement a delete modal instead of making it an alert
 - [TODO] Link calendar event to recipe
 - [TODO] Debug uploading images on frontend
+- [BUG] Recibe Book covers are randomized. We need a cover index for the covers.
+- [QUESTIONS] For the next week assignments, is populating our app with data required?
 
 ## Plans and Decisions
 
