@@ -109,7 +109,15 @@ export const AddRecipeToDishRequest: Sync = ({ request, token, user, recipe, dis
   then: actions([Dishes.addRecipe, { recipe, dish }]),
 });
 
-export const AddRecipeToDishResponse: Sync = ({ request, error }) => ({
+export const AddRecipeToDishResponse: Sync = ({ request }) => ({
+  when: actions(
+    [Requesting.request, { path: "/Dishes/addRecipe" }, { request }],
+    [Dishes.addRecipe, {}, { }],
+  ),
+  then: actions([Requesting.respond, { request }]),
+});
+
+export const AddRecipeToDishErrorResponse: Sync = ({ request, error }) => ({
   when: actions(
     [Requesting.request, { path: "/Dishes/addRecipe" }, { request }],
     [Dishes.addRecipe, {}, { error }],
@@ -155,12 +163,12 @@ export const SetDefaultRecipeRequest: Sync = ({ request, token, user, recipe, di
   then: actions([Dishes.setDefaultRecipe, { recipe, dish }]),
 });
 
-export const SetDefaultRecipeResponse: Sync = ({ request, dish }) => ({
+export const SetDefaultRecipeResponse: Sync = ({ request }) => ({
   when: actions(
     [Requesting.request, { path: "/Dishes/setDefaultRecipe" }, { request }],
-    [Dishes.setDefaultRecipe, {}, { dish }],
+    [Dishes.setDefaultRecipe, {}, { }],
   ),
-  then: actions([Requesting.respond, { request, dish }]),
+  then: actions([Requesting.respond, { request}]),
 });
 
 export const SetDefaultRecipeErrorResponse: Sync = ({ request, error }) => ({
