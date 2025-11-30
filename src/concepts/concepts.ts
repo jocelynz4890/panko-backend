@@ -9,24 +9,24 @@ import { getDb } from "@utils/database.ts";
 
 import AuthenticationConcept from "./Authentication/AuthenticationConcept.ts";
 import CalendarConcept from "./Calendar/CalendarConcept.ts";
-import RecipeBookConcept from "./RecipeBook/RecipeBookConcept.ts";
 import DishesConcept from "./Dishes/DishesConcept.ts";
-import RequestingConcept from "./Requesting/RequestingConcept.ts";
 import RecipeConcept from "./Recipe/RecipeConcept.ts";
+import RecipeBookConcept from "./RecipeBook/RecipeBookConcept.ts";
+import RequestingConcept from "./Requesting/RequestingConcept.ts";
 
 export type { default as AuthenticationConcept } from "./Authentication/AuthenticationConcept.ts";
 export type { default as CalendarConcept } from "./Calendar/CalendarConcept.ts";
-export type { default as RecipeBookConcept } from "./RecipeBook/RecipeBookConcept.ts";
 export type { default as DishesConcept } from "./Dishes/DishesConcept.ts";
-export type { default as RequestingConcept } from "./Requesting/RequestingConcept.ts";
 export type { default as RecipeConcept } from "./Recipe/RecipeConcept.ts";
+export type { default as RecipeBookConcept } from "./RecipeBook/RecipeBookConcept.ts";
+export type { default as RequestingConcept } from "./Requesting/RequestingConcept.ts";
 
 // Initialize the database connection
 export const [db, client] = await getDb();
 
 export const Authentication = Engine.instrumentConcept(new AuthenticationConcept(db));
 export const Calendar = Engine.instrumentConcept(new CalendarConcept(db));
-export const RecipeBook = Engine.instrumentConcept(new RecipeBookConcept(db));
 export const Dishes = Engine.instrumentConcept(new DishesConcept(db));
-export const Requesting = Engine.instrumentConcept(new RequestingConcept(db));
 export const Recipe = Engine.instrumentConcept(new RecipeConcept(db));
+export const RecipeBook = Engine.instrumentConcept(new RecipeBookConcept(db));
+export const Requesting = Engine.instrumentConcept(new RequestingConcept(db));

@@ -25,14 +25,8 @@
  */
 
 export const inclusions: Record<string, string> = {
-  // Feel free to delete these example inclusions
-  "/api/LikertSurvey/_getSurveyQuestions": "this is a public query",
-  "/api/LikertSurvey/_getSurveyResponses": "responses are public",
-  "/api/LikertSurvey/_getRespondentAnswers": "answers are visible",
-  "/api/LikertSurvey/submitResponse": "allow anyone to submit response",
-  "/api/LikertSurvey/updateResponse": "allow anyone to update their response",
-  "/api/Dish/createDish": "creating dishes is a public action",
-  "/api/Recipe/createRecipe": "sharing recipes is a public action",
+  // All endpoints go through synchronizations for consistent handling
+  // No direct passthrough routes are needed
 };
 
 /**
@@ -46,7 +40,42 @@ export const inclusions: Record<string, string> = {
  */
 
 export const exclusions: Array<string> = [
-  // Feel free to delete these example exclusions
-  "/api/LikertSurvey/createSurvey",
-  "/api/LikertSurvey/addQuestion",
+  // Authentication endpoints - go through syncs for proper handling
+  "/api/Authentication/register",
+  "/api/Authentication/authenticate",
+  "/api/Authentication/createSession",
+  "/api/Authentication/validateSession",
+  "/api/Authentication/invalidateSession",
+
+  // Dishes endpoints - go through syncs with authentication
+  "/api/Dishes/createDish",
+  "/api/Dishes/editDishName",
+  "/api/Dishes/deleteDish",
+  "/api/Dishes/addRecipe",
+  "/api/Dishes/removeRecipe",
+  "/api/Dishes/setDefaultRecipe",
+  "/api/Dishes/_getDish",
+
+  // Recipe endpoints (cooking attempts) - go through syncs with authentication
+  "/api/Recipe/createRecipe",
+  "/api/Recipe/editRecipe",
+  "/api/Recipe/addRecipePicture",
+  "/api/Recipe/deleteRecipe",
+  "/api/Recipe/deleteAllRecipesForDish",
+  "/api/Recipe/_getRecipes",
+
+  // RecipeBook endpoints - go through syncs with authentication
+  "/api/RecipeBook/createRecipeBook",
+  "/api/RecipeBook/editRecipeBookName",
+  "/api/RecipeBook/addDishToBook",
+  "/api/RecipeBook/removeDishFromBook",
+  "/api/RecipeBook/deleteRecipeBook",
+  "/api/RecipeBook/_getBooks",
+  "/api/RecipeBook/_getBook",
+
+  // Calendar endpoints - go through syncs with authentication
+  "/api/Calendar/assignRecipeToDate",
+  "/api/Calendar/deleteScheduledRecipe",
+  "/api/Calendar/deleteAllScheduledRecipesWithRecipe",
+  "/api/Calendar/_getScheduledRecipes",
 ];

@@ -4,11 +4,41 @@
 
 import type { Sync } from "@engine";
 
+import * as sync_authentication from "./authentication.sync.ts";
+import * as sync_calendar from "./calendar.sync.ts";
+import * as sync_dishes from "./dishes.sync.ts";
+import * as sync_recipebook from "./recipebook.sync.ts";
+import * as sync_recipes from "./recipes.sync.ts";
 import * as sync_sample from "./sample.sync.ts";
 
 const allSyncs: Record<string, Sync> = {};
 
 
+for (const [name, func] of Object.entries(sync_authentication)) {
+  if (typeof func === "function") {
+    allSyncs[`authentication.${name}`] = func as Sync;
+  }
+}
+for (const [name, func] of Object.entries(sync_calendar)) {
+  if (typeof func === "function") {
+    allSyncs[`calendar.${name}`] = func as Sync;
+  }
+}
+for (const [name, func] of Object.entries(sync_dishes)) {
+  if (typeof func === "function") {
+    allSyncs[`dishes.${name}`] = func as Sync;
+  }
+}
+for (const [name, func] of Object.entries(sync_recipebook)) {
+  if (typeof func === "function") {
+    allSyncs[`recipebook.${name}`] = func as Sync;
+  }
+}
+for (const [name, func] of Object.entries(sync_recipes)) {
+  if (typeof func === "function") {
+    allSyncs[`recipes.${name}`] = func as Sync;
+  }
+}
 for (const [name, func] of Object.entries(sync_sample)) {
   if (typeof func === "function") {
     allSyncs[`sample.${name}`] = func as Sync;
