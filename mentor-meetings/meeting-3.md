@@ -42,11 +42,9 @@ Sunday, November 30
 ## Plans and Decisions
 
 Decisions made:
-
--
+- Using Cloudinery instead of imgur because imgur api is outdated(?)
 
 Plans for next week:
-
-- Lots of testing and debugging!
+- Lotsss of testing and debugging!
 - Refine styling
 - Optimize backend requests
