@@ -16,12 +16,20 @@ export const CreateDishRequest: Sync = ({ request, token, user, name, descriptio
   then: actions([Dishes.createDish, { user, name, description }]),
 });
 
-export const CreateDishResponse: Sync = ({ request, dish, error }) => ({
+export const CreateDishResponse: Sync = ({ request, dish }) => ({
   when: actions(
     [Requesting.request, { path: "/Dishes/createDish" }, { request }],
-    [Dishes.createDish, {}, { dish, error }],
+    [Dishes.createDish, {}, { dish }],
   ),
-  then: actions([Requesting.respond, { request, dish, error }]),
+  then: actions([Requesting.respond, { request, dish }]),
+});
+
+export const CreateDishErrorResponse: Sync = ({ request, error }) => ({
+  when: actions(
+    [Requesting.request, { path: "/Dishes/createDish" }, { request }],
+    [Dishes.createDish, {}, { error }],
+  ),
+  then: actions([Requesting.respond, { request, error }]),
 });
 
 // Edit dish name - requires authentication
@@ -39,12 +47,20 @@ export const EditDishNameRequest: Sync = ({ request, token, user, dish, newName,
   then: actions([Dishes.editDishName, { dish, newName, description }]),
 });
 
-export const EditDishNameResponse: Sync = ({ request, dish, error }) => ({
+export const EditDishNameResponse: Sync = ({ request, dish }) => ({
   when: actions(
     [Requesting.request, { path: "/Dishes/editDishName" }, { request }],
-    [Dishes.editDishName, {}, { dish, error }],
+    [Dishes.editDishName, {}, { dish }],
   ),
-  then: actions([Requesting.respond, { request, dish, error }]),
+  then: actions([Requesting.respond, { request, dish }]),
+});
+
+export const EditDishNameErrorResponse: Sync = ({ request, error }) => ({
+  when: actions(
+    [Requesting.request, { path: "/Dishes/editDishName" }, { request }],
+    [Dishes.editDishName, {}, { error }],
+  ),
+  then: actions([Requesting.respond, { request, error }]),
 });
 
 // Delete dish - requires authentication
@@ -62,12 +78,20 @@ export const DeleteDishRequest: Sync = ({ request, token, user, dish }) => ({
   then: actions([Dishes.deleteDish, { dish }]),
 });
 
-export const DeleteDishResponse: Sync = ({ request, dish, error }) => ({
+export const DeleteDishResponse: Sync = ({ request, dish }) => ({
   when: actions(
     [Requesting.request, { path: "/Dishes/deleteDish" }, { request }],
-    [Dishes.deleteDish, {}, { dish, error }],
+    [Dishes.deleteDish, {}, { dish }],
   ),
-  then: actions([Requesting.respond, { request, dish, error }]),
+  then: actions([Requesting.respond, { request, dish }]),
+});
+
+export const DeleteDishErrorResponse: Sync = ({ request, error }) => ({
+  when: actions(
+    [Requesting.request, { path: "/Dishes/deleteDish" }, { request }],
+    [Dishes.deleteDish, {}, { error }],
+  ),
+  then: actions([Requesting.respond, { request, error }]),
 });
 
 // Add recipe to dish - requires authentication
@@ -140,12 +164,21 @@ export const SetDefaultRecipeResponse: Sync = ({ request, error }) => ({
 });
 
 // Get dish - public query (handled via query in where clause)
-export const GetDishRequest: Sync = ({ request, dish }) => ({
+export const GetDishRequest: Sync = ({ request, dish, dishes }) => ({
   when: actions(
     [Requesting.request, { path: "/Dishes/_getDish", dish }, { request }],
   ),
   where: async (frames) => {
+    // Preserve original frames (with actionIds) before any queries
+    const originalFrames = frames.length > 0 ? frames : [];
+    
     frames = await frames.query(Dishes._getDish, { dish }, { dishes });
+    // Ensure dishes is always bound, even if empty
+    if (frames.length === 0 || !frames.some(($) => $[dishes] !== undefined)) {
+      // Create a frame with empty dishes array, preserving all bindings from original frame
+      const baseFrame = frames[0] || originalFrames[0] || {};
+      return new Frames({ ...baseFrame, [dishes]: [] });
+    }
     return frames;
   },
   then: actions([Requesting.respond, { request, dishes }]),

@@ -1,0 +1,7 @@
+# Design Summary
+
+We initially ideated many concepts related to cooking, including having an ingredient list. We received lots of great feedback about support import/export functionality after our project pitch, which is a concept that we unfortunately cut due to lack of manpower in development to be able to handle so many concepts. We would have also liked to tie in the feedback of progress being a tree rather than being linear, but unfortunately could not add this to our Snapshot concept due to the time constraint. We also cut many of our other concepts to hone in more on solving the problem of tracking iterative cooking.
+
+For our project started with the concepts RecipeBook, Recipe, Snapshot, Calendar, and Authentication. Initially, Recipe and Snapshot were very tightly coupled, with Recipe essentially acting as a container for multiple snapshots, and RecipeBook acting as a container for multiple Recipes. This didn't make a lot of sense, since Recipe should have ingredients and things that one would typically find in a recipe. RecipeBook and Recipe seemed to embody more of a "Groupings" concept. Based on this, we refactored our concept names to be a hierarchy of RecipeBook > Dish > Recipe, which captures the idea that each dish can have multiple recipes, which is the relationship that we really meant to use.
+
+Another change we had to make to a concept was adding a coverId to the RecipeBook concept after working more on the frontend and discovering that we needed a way to assign book covers to each RecipeBook.

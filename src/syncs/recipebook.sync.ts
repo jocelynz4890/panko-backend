@@ -2,40 +2,50 @@ import { actions, Sync, Frames } from "@engine";
 import { RecipeBook, Requesting, Authentication } from "@concepts";
 
 // Create recipe book - requires authentication
-export const CreateRecipeBookRequest: Sync = ({ request, token, user, name }) => ({
+export const CreateRecipeBookRequest: Sync = ({ request, token, name, coverIndex }) => ({
   when: actions(
-    [Requesting.request, { path: "/RecipeBook/createRecipeBook", token, name }, { request }],
+    [Requesting.request, { path: "/RecipeBook/createRecipeBook", token, name, coverIndex }, { request }],
   ),
-  where: async (frames) => {
-    if (token) {
-      frames = await frames.query(Authentication._getUserBySession, { token }, { user });
-      return frames.filter(($) => $[user] !== undefined);
-    }
-    return new Frames();
-  },
-  then: actions([RecipeBook.createRecipeBook, { user, name }]),
+  then: actions([Authentication.validateSession, { token }]),
 });
 
-export const CreateRecipeBookResponse: Sync = ({ request, book, error }) => ({
+export const CreateRecipeBookWithAuth: Sync = ({ request, user, name, coverIndex }) => ({
+  when: actions(
+    [Requesting.request, { path: "/RecipeBook/createRecipeBook", name, coverIndex }, { request }],
+    [Authentication.validateSession, {}, { user }],
+  ),
+  then: actions([RecipeBook.createRecipeBook, { user, name, coverIndex }]),
+});
+
+export const CreateRecipeBookResponse: Sync = ({ request, book }) => ({
   when: actions(
     [Requesting.request, { path: "/RecipeBook/createRecipeBook" }, { request }],
-    [RecipeBook.createRecipeBook, {}, { book, error }],
+    [RecipeBook.createRecipeBook, {}, { book }],
   ),
-  then: actions([Requesting.respond, { request, book, error }]),
+  then: actions([Requesting.respond, { request, book }]),
+});
+
+export const CreateRecipeBookErrorResponse: Sync = ({ request, error }) => ({
+  when: actions(
+    [Requesting.request, { path: "/RecipeBook/createRecipeBook" }, { request }],
+    [RecipeBook.createRecipeBook, {}, { error }],
+  ),
+  then: actions([Requesting.respond, { request, error }]),
 });
 
 // Edit recipe book name - requires authentication
-export const EditRecipeBookNameRequest: Sync = ({ request, token, user, book, newName }) => ({
+export const EditRecipeBookNameRequest: Sync = ({ request, token, book, newName }) => ({
   when: actions(
     [Requesting.request, { path: "/RecipeBook/editRecipeBookName", token, book, newName }, { request }],
   ),
-  where: async (frames) => {
-    if (token) {
-      frames = await frames.query(Authentication._getUserBySession, { token }, { user });
-      return frames.filter(($) => $[user] !== undefined);
-    }
-    return new Frames();
-  },
+  then: actions([Authentication.validateSession, { token }]),
+});
+
+export const EditRecipeBookNameWithAuth: Sync = ({ request, user, book, newName }) => ({
+  when: actions(
+    [Requesting.request, { path: "/RecipeBook/editRecipeBookName", book, newName }, { request }],
+    [Authentication.validateSession, {}, { user }],
+  ),
   then: actions([RecipeBook.editRecipeBookName, { book, newName }]),
 });
 
@@ -48,17 +58,18 @@ export const EditRecipeBookNameResponse: Sync = ({ request, error }) => ({
 });
 
 // Add dish to book - requires authentication
-export const AddDishToBookRequest: Sync = ({ request, token, user, dish, book }) => ({
+export const AddDishToBookRequest: Sync = ({ request, token, dish, book }) => ({
   when: actions(
     [Requesting.request, { path: "/RecipeBook/addDishToBook", token, dish, book }, { request }],
   ),
-  where: async (frames) => {
-    if (token) {
-      frames = await frames.query(Authentication._getUserBySession, { token }, { user });
-      return frames.filter(($) => $[user] !== undefined);
-    }
-    return new Frames();
-  },
+  then: actions([Authentication.validateSession, { token }]),
+});
+
+export const AddDishToBookWithAuth: Sync = ({ request, user, dish, book }) => ({
+  when: actions(
+    [Requesting.request, { path: "/RecipeBook/addDishToBook", dish, book }, { request }],
+    [Authentication.validateSession, {}, { user }],
+  ),
   then: actions([RecipeBook.addDishToBook, { dish, book }]),
 });
 
@@ -71,17 +82,18 @@ export const AddDishToBookResponse: Sync = ({ request, error }) => ({
 });
 
 // Remove dish from book - requires authentication
-export const RemoveDishFromBookRequest: Sync = ({ request, token, user, dish, book }) => ({
+export const RemoveDishFromBookRequest: Sync = ({ request, token, dish, book }) => ({
   when: actions(
     [Requesting.request, { path: "/RecipeBook/removeDishFromBook", token, dish, book }, { request }],
   ),
-  where: async (frames) => {
-    if (token) {
-      frames = await frames.query(Authentication._getUserBySession, { token }, { user });
-      return frames.filter(($) => $[user] !== undefined);
-    }
-    return new Frames();
-  },
+  then: actions([Authentication.validateSession, { token }]),
+});
+
+export const RemoveDishFromBookWithAuth: Sync = ({ request, user, dish, book }) => ({
+  when: actions(
+    [Requesting.request, { path: "/RecipeBook/removeDishFromBook", dish, book }, { request }],
+    [Authentication.validateSession, {}, { user }],
+  ),
   then: actions([RecipeBook.removeDishFromBook, { dish, book }]),
 });
 
@@ -94,17 +106,18 @@ export const RemoveDishFromBookResponse: Sync = ({ request, error }) => ({
 });
 
 // Delete recipe book - requires authentication
-export const DeleteRecipeBookRequest: Sync = ({ request, token, user, book }) => ({
+export const DeleteRecipeBookRequest: Sync = ({ request, token, book }) => ({
   when: actions(
     [Requesting.request, { path: "/RecipeBook/deleteRecipeBook", token, book }, { request }],
   ),
-  where: async (frames) => {
-    if (token) {
-      frames = await frames.query(Authentication._getUserBySession, { token }, { user });
-      return frames.filter(($) => $[user] !== undefined);
-    }
-    return new Frames();
-  },
+  then: actions([Authentication.validateSession, { token }]),
+});
+
+export const DeleteRecipeBookWithAuth: Sync = ({ request, user, book }) => ({
+  when: actions(
+    [Requesting.request, { path: "/RecipeBook/deleteRecipeBook", book }, { request }],
+    [Authentication.validateSession, {}, { user }],
+  ),
   then: actions([RecipeBook.deleteRecipeBook, { book }]),
 });
 
@@ -116,32 +129,57 @@ export const DeleteRecipeBookResponse: Sync = ({ request, error }) => ({
   then: actions([Requesting.respond, { request, error }]),
 });
 
-// Get books - requires authentication (handled via query in where clause)
-export const GetBooksRequest: Sync = ({ request, token, user }) => ({
+// Get books - requires authentication
+export const GetBooksRequest: Sync = ({ request, token }) => ({
   when: actions(
     [Requesting.request, { path: "/RecipeBook/_getBooks", token }, { request }],
   ),
+  then: actions([Authentication.validateSession, { token }]),
+});
+
+export const GetBooksWithAuth: Sync = ({ request, user, books }) => ({
+  when: actions(
+    [Requesting.request, { path: "/RecipeBook/_getBooks" }, { request }],
+    [Authentication.validateSession, {}, { user }],
+  ),
   where: async (frames) => {
-    if (token) {
-      frames = await frames.query(Authentication._getUserBySession, { token }, { user });
-      frames = frames.filter(($) => $[user] !== undefined);
-      if (frames.length > 0) {
-        frames = await frames.query(RecipeBook._getBooks, { user }, { books });
-      }
-      return frames;
+    // Query returns an array of documents, but we need to bind the entire array to books
+    // Wrap the query to return objects with a books property
+    const wrappedQuery = async (input: { user: string }) => {
+      const result = await RecipeBook._getBooks(input);
+      // Return array with single object containing the entire books array
+      return [{ books: result }];
+    };
+    
+    frames = await frames.query(wrappedQuery, { user }, { books });
+    // Ensure books is always bound, even if query returns empty
+    if (frames.length === 0 || !frames.some(($) => $[books] !== undefined)) {
+      // Create a frame with empty books array, preserving all bindings from first frame
+      const firstFrame = frames[0] || {};
+      return new Frames({ ...firstFrame, [books]: [] });
     }
-    return new Frames();
+    // Return the first frame (should have the books array bound)
+    return new Frames(frames[0]);
   },
   then: actions([Requesting.respond, { request, books }]),
 });
 
 // Get book - public query (handled via query in where clause)
-export const GetBookRequest: Sync = ({ request, book }) => ({
+export const GetBookRequest: Sync = ({ request, book, books }) => ({
   when: actions(
     [Requesting.request, { path: "/RecipeBook/_getBook", book }, { request }],
   ),
   where: async (frames) => {
+    // Preserve original frames (with actionIds) before any queries
+    const originalFrames = frames.length > 0 ? frames : [];
+    
     frames = await frames.query(RecipeBook._getBook, { book }, { books });
+    // Ensure books is always bound, even if empty
+    if (frames.length === 0 || !frames.some(($) => $[books] !== undefined)) {
+      // Create a frame with empty books array, preserving all bindings from original frame
+      const baseFrame = frames[0] || originalFrames[0] || {};
+      return new Frames({ ...baseFrame, [books]: [] });
+    }
     return frames;
   },
   then: actions([Requesting.respond, { request, books }]),

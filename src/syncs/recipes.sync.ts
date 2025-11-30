@@ -16,12 +16,20 @@ export const CreateRecipeRequest: Sync = ({ request, token, user, ingredientsLis
   then: actions([Recipe.createRecipe, { user, ingredientsList, subname, pictures, date, instructions, note, ranking, dish }]),
 });
 
-export const CreateRecipeResponse: Sync = ({ request, recipe, error }) => ({
+export const CreateRecipeResponse: Sync = ({ request, recipe }) => ({
   when: actions(
     [Requesting.request, { path: "/Recipe/createRecipe" }, { request }],
-    [Recipe.createRecipe, {}, { recipe, error }],
+    [Recipe.createRecipe, {}, { recipe }],
   ),
-  then: actions([Requesting.respond, { request, recipe, error }]),
+  then: actions([Requesting.respond, { request, recipe }]),
+});
+
+export const CreateRecipeErrorResponse: Sync = ({ request, error }) => ({
+  when: actions(
+    [Requesting.request, { path: "/Recipe/createRecipe" }, { request }],
+    [Recipe.createRecipe, {}, { error }],
+  ),
+  then: actions([Requesting.respond, { request, error }]),
 });
 
 // Edit recipe - requires authentication
@@ -39,12 +47,20 @@ export const EditRecipeRequest: Sync = ({ request, token, user, recipe, ingredie
   then: actions([Recipe.editRecipe, { recipe, ingredientsList, subname, pictures, date, instructions, note, ranking }]),
 });
 
-export const EditRecipeResponse: Sync = ({ request, recipe, error }) => ({
+export const EditRecipeResponse: Sync = ({ request, recipe }) => ({
   when: actions(
     [Requesting.request, { path: "/Recipe/editRecipe" }, { request }],
-    [Recipe.editRecipe, {}, { recipe, error }],
+    [Recipe.editRecipe, {}, { recipe }],
   ),
-  then: actions([Requesting.respond, { request, recipe, error }]),
+  then: actions([Requesting.respond, { request, recipe }]),
+});
+
+export const EditRecipeErrorResponse: Sync = ({ request, error }) => ({
+  when: actions(
+    [Requesting.request, { path: "/Recipe/editRecipe" }, { request }],
+    [Recipe.editRecipe, {}, { error }],
+  ),
+  then: actions([Requesting.respond, { request, error }]),
 });
 
 // Delete recipe - requires authentication
@@ -62,12 +78,20 @@ export const DeleteRecipeRequest: Sync = ({ request, token, user, recipe }) => (
   then: actions([Recipe.deleteRecipe, { recipe }]),
 });
 
-export const DeleteRecipeResponse: Sync = ({ request, recipe, error }) => ({
+export const DeleteRecipeResponse: Sync = ({ request, recipe }) => ({
   when: actions(
     [Requesting.request, { path: "/Recipe/deleteRecipe" }, { request }],
-    [Recipe.deleteRecipe, {}, { recipe, error }],
+    [Recipe.deleteRecipe, {}, { recipe }],
   ),
-  then: actions([Requesting.respond, { request, recipe, error }]),
+  then: actions([Requesting.respond, { request, recipe }]),
+});
+
+export const DeleteRecipeErrorResponse: Sync = ({ request, error }) => ({
+  when: actions(
+    [Requesting.request, { path: "/Recipe/deleteRecipe" }, { request }],
+    [Recipe.deleteRecipe, {}, { error }],
+  ),
+  then: actions([Requesting.respond, { request, error }]),
 });
 
 // Delete all recipes for dish - requires authentication
@@ -108,21 +132,38 @@ export const AddRecipePictureRequest: Sync = ({ request, token, user, recipe, pi
   then: actions([Recipe.addRecipePicture, { recipe, pictureUrl }]),
 });
 
-export const AddRecipePictureResponse: Sync = ({ request, recipe, error }) => ({
+export const AddRecipePictureResponse: Sync = ({ request, recipe }) => ({
   when: actions(
     [Requesting.request, { path: "/Recipe/addRecipePicture" }, { request }],
-    [Recipe.addRecipePicture, {}, { recipe, error }],
+    [Recipe.addRecipePicture, {}, { recipe }],
   ),
-  then: actions([Requesting.respond, { request, recipe, error }]),
+  then: actions([Requesting.respond, { request, recipe }]),
+});
+
+export const AddRecipePictureErrorResponse: Sync = ({ request, error }) => ({
+  when: actions(
+    [Requesting.request, { path: "/Recipe/addRecipePicture" }, { request }],
+    [Recipe.addRecipePicture, {}, { error }],
+  ),
+  then: actions([Requesting.respond, { request, error }]),
 });
 
 // Get recipes - public query (handled via passthrough or direct query in where clause)
-export const GetRecipesRequest: Sync = ({ request, dish }) => ({
+export const GetRecipesRequest: Sync = ({ request, dish, recipes }) => ({
   when: actions(
     [Requesting.request, { path: "/Recipe/_getRecipes", dish }, { request }],
   ),
   where: async (frames) => {
+    // Preserve original frames (with actionIds) before any queries
+    const originalFrames = frames.length > 0 ? frames : [];
+    
     frames = await frames.query(Recipe._getRecipes, { dish }, { recipes });
+    // Ensure recipes is always bound, even if empty
+    if (frames.length === 0 || !frames.some(($) => $[recipes] !== undefined)) {
+      // Create a frame with empty recipes array, preserving all bindings from original frame
+      const baseFrame = frames[0] || originalFrames[0] || {};
+      return new Frames({ ...baseFrame, [recipes]: [] });
+    }
     return frames;
   },
   then: actions([Requesting.respond, { request, recipes }]),

@@ -16,12 +16,20 @@ export const AssignRecipeToDateRequest: Sync = ({ request, token, user, recipe, 
   then: actions([Calendar.assignRecipeToDate, { user, recipe, date }]),
 });
 
-export const AssignRecipeToDateResponse: Sync = ({ request, scheduledRecipe, error }) => ({
+export const AssignRecipeToDateResponse: Sync = ({ request, scheduledRecipe }) => ({
   when: actions(
     [Requesting.request, { path: "/Calendar/assignRecipeToDate" }, { request }],
-    [Calendar.assignRecipeToDate, {}, { scheduledRecipe, error }],
+    [Calendar.assignRecipeToDate, {}, { scheduledRecipe }],
   ),
-  then: actions([Requesting.respond, { request, scheduledRecipe, error }]),
+  then: actions([Requesting.respond, { request, scheduledRecipe }]),
+});
+
+export const AssignRecipeToDateErrorResponse: Sync = ({ request, error }) => ({
+  when: actions(
+    [Requesting.request, { path: "/Calendar/assignRecipeToDate" }, { request }],
+    [Calendar.assignRecipeToDate, {}, { error }],
+  ),
+  then: actions([Requesting.respond, { request, error }]),
 });
 
 // Delete scheduled recipe - requires authentication
@@ -71,20 +79,34 @@ export const DeleteAllScheduledRecipesWithRecipeResponse: Sync = ({ request, err
 });
 
 // Get scheduled recipes - requires authentication (handled via query in where clause)
-export const GetScheduledRecipesRequest: Sync = ({ request, token, user }) => ({
+export const GetScheduledRecipesRequest: Sync = ({ request, token, user, scheduledRecipes }) => ({
   when: actions(
     [Requesting.request, { path: "/Calendar/_getScheduledRecipes", token }, { request }],
   ),
   where: async (frames) => {
+    // Preserve original frames (with actionIds) before any queries
+    const originalFrames = frames.length > 0 ? frames : [];
+    
     if (token) {
       frames = await frames.query(Authentication._getUserBySession, { token }, { user });
       frames = frames.filter(($) => $[user] !== undefined);
       if (frames.length > 0) {
         frames = await frames.query(Calendar._getScheduledRecipes, { user }, { scheduledRecipes });
+        // Ensure scheduledRecipes is always bound, even if query returns empty
+        if (frames.length === 0 || !frames.some(($) => $[scheduledRecipes] !== undefined)) {
+          // Create a frame with empty scheduledRecipes array, preserving all bindings from first authenticated frame
+          const firstFrame = frames[0] || originalFrames[0] || {};
+          return new Frames({ ...firstFrame, [scheduledRecipes]: [] });
+        }
+        return frames;
       }
-      return frames;
+      // If no authenticated user, preserve original frame and add empty scheduledRecipes
+      const baseFrame = originalFrames[0] || {};
+      return new Frames({ ...baseFrame, [scheduledRecipes]: [] });
     }
-    return new Frames();
+    // If no token, preserve original frame and add empty scheduledRecipes
+    const baseFrame = originalFrames[0] || {};
+    return new Frames({ ...baseFrame, [scheduledRecipes]: [] });
   },
   then: actions([Requesting.respond, { request, scheduledRecipes }]),
 });

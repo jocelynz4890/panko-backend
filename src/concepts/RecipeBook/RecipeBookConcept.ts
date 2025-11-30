@@ -16,12 +16,14 @@ type BookID = ID;
  *   a user of type User
  *   a dishes set of Dish
  *   a name of type String
+ *   a coverIndex of type Number (optional, for frontend cover selection)
  */
 interface RecipeBookDoc {
   _id: BookID;
   user: User;
   dishes: Dish[];
   name: string;
+  coverIndex?: number;
 }
 
 export default class RecipeBookConcept {
@@ -32,13 +34,13 @@ export default class RecipeBookConcept {
   }
 
   /**
-   * createRecipeBook (user: User, name: String): (book: RecipeBook)
+   * createRecipeBook (user: User, name: String, coverIndex?: Number): (book: RecipeBook)
    *
    * **requires** user exists
-   * **effects** creates a new recipe book `b`; sets user of `b` to `user`; sets name of `b` to `name`; sets dishes of `b` to empty; returns `b` as `book`
+   * **effects** creates a new recipe book `b`; sets user of `b` to `user`; sets name of `b` to `name`; sets dishes of `b` to empty; sets coverIndex of `b` to `coverIndex` if provided; returns `b` as `book`
    */
   async createRecipeBook(
-    { user, name }: { user: User; name: string },
+    { user, name, coverIndex }: { user: User; name: string; coverIndex?: number },
   ): Promise<{ book: BookID } | { error: string }> {
     if (!user) {
       return { error: "User is required" };
@@ -50,6 +52,7 @@ export default class RecipeBookConcept {
       user,
       name,
       dishes: [],
+      ...(coverIndex !== undefined && { coverIndex }),
     };
 
     await this.books.insertOne(doc);
