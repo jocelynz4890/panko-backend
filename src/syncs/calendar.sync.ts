@@ -11,10 +11,10 @@ export const AssignRecipeToDateRequest: Sync = ({ request, token, recipe, date }
 
 export const AssignRecipeToDateWithAuth: Sync = ({ request, user, recipe, date, scheduledRecipe }) => ({
   when: actions(
-    [Requesting.request, { path: "/Calendar/assignRecipeToDate" }, { request }],
+    [Requesting.request, { path: "/Calendar/assignRecipeToDate", recipe, date }, { request }],
     [Authentication.validateSession, {}, { user }],
   ),
-  then: actions([Calendar.assignRecipeToDate, { user, recipe, date, scheduledRecipe }]),
+  then: actions([Calendar.assignRecipeToDate, { user, recipe, date }]),
 });
 
 export const AssignRecipeToDateResponse: Sync = ({ request, scheduledRecipe }) => ({
@@ -43,7 +43,7 @@ export const DeleteScheduledRecipeRequest: Sync = ({ request, token, scheduledRe
 
 export const DeleteScheduledRecipeWithAuth: Sync = ({ request, user, scheduledRecipe }) => ({
   when: actions(
-    [Requesting.request, { path: "/Calendar/deleteScheduledRecipe" }, { request }],
+    [Requesting.request, { path: "/Calendar/deleteScheduledRecipe", scheduledRecipe }, { request }],
     [Authentication.validateSession, {}, { user }],
   ),
   then: actions([Calendar.deleteScheduledRecipe, { scheduledRecipe }]),
