@@ -170,17 +170,23 @@ export const GetBookRequest: Sync = ({ request, book, books }) => ({
     [Requesting.request, { path: "/RecipeBook/_getBook", book }, { request }],
   ),
   where: async (frames) => {
-    // Preserve original frames (with actionIds) before any queries
-    const originalFrames = frames.length > 0 ? frames : [];
+    // Query returns an array of documents, but we need to bind the entire array to books
+    // Wrap the query to return objects with a books property
+    const wrappedQuery = async (input: { book: string }) => {
+      const result = await RecipeBook._getBook(input);
+      // Return array with single object containing the entire books array
+      return [{ books: result }];
+    };
     
-    frames = await frames.query(RecipeBook._getBook, { book }, { books });
+    frames = await frames.query(wrappedQuery, { book }, { books });
     // Ensure books is always bound, even if empty
     if (frames.length === 0 || !frames.some(($) => $[books] !== undefined)) {
-      // Create a frame with empty books array, preserving all bindings from original frame
-      const baseFrame = frames[0] || originalFrames[0] || {};
-      return new Frames({ ...baseFrame, [books]: [] });
+      // Create a frame with empty books array, preserving all bindings from first frame
+      const firstFrame = frames[0] || {};
+      return new Frames({ ...firstFrame, [books]: [] });
     }
-    return frames;
+    // Return the first frame (should have the books array bound)
+    return new Frames(frames[0]);
   },
   then: actions([Requesting.respond, { request, books }]),
 });

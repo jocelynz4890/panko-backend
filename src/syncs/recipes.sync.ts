@@ -154,17 +154,23 @@ export const GetRecipesRequest: Sync = ({ request, dish, recipes }) => ({
     [Requesting.request, { path: "/Recipe/_getRecipes", dish }, { request }],
   ),
   where: async (frames) => {
-    // Preserve original frames (with actionIds) before any queries
-    const originalFrames = frames.length > 0 ? frames : [];
+    // Query returns an array of documents, but we need to bind the entire array to recipes
+    // Wrap the query to return objects with a recipes property
+    const wrappedQuery = async (input: { dish: string }) => {
+      const result = await Recipe._getRecipes(input);
+      // Return array with single object containing the entire recipes array
+      return [{ recipes: result }];
+    };
     
-    frames = await frames.query(Recipe._getRecipes, { dish }, { recipes });
+    frames = await frames.query(wrappedQuery, { dish }, { recipes });
     // Ensure recipes is always bound, even if empty
     if (frames.length === 0 || !frames.some(($) => $[recipes] !== undefined)) {
-      // Create a frame with empty recipes array, preserving all bindings from original frame
-      const baseFrame = frames[0] || originalFrames[0] || {};
-      return new Frames({ ...baseFrame, [recipes]: [] });
+      // Create a frame with empty recipes array, preserving all bindings from first frame
+      const firstFrame = frames[0] || {};
+      return new Frames({ ...firstFrame, [recipes]: [] });
     }
-    return frames;
+    // Return the first frame (should have the recipes array bound)
+    return new Frames(frames[0]);
   },
   then: actions([Requesting.respond, { request, recipes }]),
 });

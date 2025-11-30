@@ -78,35 +78,37 @@ export const DeleteAllScheduledRecipesWithRecipeResponse: Sync = ({ request, err
   then: actions([Requesting.respond, { request, error }]),
 });
 
-// Get scheduled recipes - requires authentication (handled via query in where clause)
-export const GetScheduledRecipesRequest: Sync = ({ request, token, user, scheduledRecipes }) => ({
+// Get scheduled recipes - requires authentication
+export const GetScheduledRecipesRequest: Sync = ({ request, token }) => ({
   when: actions(
     [Requesting.request, { path: "/Calendar/_getScheduledRecipes", token }, { request }],
   ),
+  then: actions([Authentication.validateSession, { token }]),
+});
+
+export const GetScheduledRecipesWithAuth: Sync = ({ request, user, scheduledRecipes }) => ({
+  when: actions(
+    [Requesting.request, { path: "/Calendar/_getScheduledRecipes" }, { request }],
+    [Authentication.validateSession, {}, { user }],
+  ),
   where: async (frames) => {
-    // Preserve original frames (with actionIds) before any queries
-    const originalFrames = frames.length > 0 ? frames : [];
+    // Query returns an array of documents, but we need to bind the entire array to scheduledRecipes
+    // Wrap the query to return objects with a scheduledRecipes property
+    const wrappedQuery = async (input: { user: string }) => {
+      const result = await Calendar._getScheduledRecipes(input);
+      // Return array with single object containing the entire scheduledRecipes array
+      return [{ scheduledRecipes: result }];
+    };
     
-    if (token) {
-      frames = await frames.query(Authentication._getUserBySession, { token }, { user });
-      frames = frames.filter(($) => $[user] !== undefined);
-      if (frames.length > 0) {
-        frames = await frames.query(Calendar._getScheduledRecipes, { user }, { scheduledRecipes });
-        // Ensure scheduledRecipes is always bound, even if query returns empty
-        if (frames.length === 0 || !frames.some(($) => $[scheduledRecipes] !== undefined)) {
-          // Create a frame with empty scheduledRecipes array, preserving all bindings from first authenticated frame
-          const firstFrame = frames[0] || originalFrames[0] || {};
-          return new Frames({ ...firstFrame, [scheduledRecipes]: [] });
-        }
-        return frames;
-      }
-      // If no authenticated user, preserve original frame and add empty scheduledRecipes
-      const baseFrame = originalFrames[0] || {};
-      return new Frames({ ...baseFrame, [scheduledRecipes]: [] });
+    frames = await frames.query(wrappedQuery, { user }, { scheduledRecipes });
+    // Ensure scheduledRecipes is always bound, even if query returns empty
+    if (frames.length === 0 || !frames.some(($) => $[scheduledRecipes] !== undefined)) {
+      // Create a frame with empty scheduledRecipes array, preserving all bindings from first frame
+      const firstFrame = frames[0] || {};
+      return new Frames({ ...firstFrame, [scheduledRecipes]: [] });
     }
-    // If no token, preserve original frame and add empty scheduledRecipes
-    const baseFrame = originalFrames[0] || {};
-    return new Frames({ ...baseFrame, [scheduledRecipes]: [] });
+    // Return the first frame (should have the scheduledRecipes array bound)
+    return new Frames(frames[0]);
   },
   then: actions([Requesting.respond, { request, scheduledRecipes }]),
 });

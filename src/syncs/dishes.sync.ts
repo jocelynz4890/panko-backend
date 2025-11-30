@@ -169,17 +169,23 @@ export const GetDishRequest: Sync = ({ request, dish, dishes }) => ({
     [Requesting.request, { path: "/Dishes/_getDish", dish }, { request }],
   ),
   where: async (frames) => {
-    // Preserve original frames (with actionIds) before any queries
-    const originalFrames = frames.length > 0 ? frames : [];
+    // Query returns an array of documents, but we need to bind the entire array to dishes
+    // Wrap the query to return objects with a dishes property
+    const wrappedQuery = async (input: { dish: string }) => {
+      const result = await Dishes._getDish(input);
+      // Return array with single object containing the entire dishes array
+      return [{ dishes: result }];
+    };
     
-    frames = await frames.query(Dishes._getDish, { dish }, { dishes });
+    frames = await frames.query(wrappedQuery, { dish }, { dishes });
     // Ensure dishes is always bound, even if empty
     if (frames.length === 0 || !frames.some(($) => $[dishes] !== undefined)) {
-      // Create a frame with empty dishes array, preserving all bindings from original frame
-      const baseFrame = frames[0] || originalFrames[0] || {};
-      return new Frames({ ...baseFrame, [dishes]: [] });
+      // Create a frame with empty dishes array, preserving all bindings from first frame
+      const firstFrame = frames[0] || {};
+      return new Frames({ ...firstFrame, [dishes]: [] });
     }
-    return frames;
+    // Return the first frame (should have the dishes array bound)
+    return new Frames(frames[0]);
   },
   then: actions([Requesting.respond, { request, dishes }]),
 });
