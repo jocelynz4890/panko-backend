@@ -196,5 +196,39 @@ Deno.test("--------------- 🍽️ RecipeConcept - Lifecycle, Constraints, and A
     assertEquals(waffleRecipesAfter.length, 1, "Waffle recipes should remain untouched");
   });
 
+  await t.step("Test Case #4: Adding recipe pictures", async () => {
+    console.log("[4] Creating a recipe without pictures...");
+    const created = await recipeConcept.createRecipe({
+      user: userAlice,
+      ingredientsList: "Image test",
+      subname: "Needs pics",
+      pictures: [],
+      date: new Date(),
+      instructions: "...",
+      note: "...",
+      ranking: 4,
+      dish: dishPancakes,
+    });
+    const imageRecipeId = created.recipe!;
+
+    console.log("[4.1] Adding a picture to the recipe...");
+    const imageUrl = "https://cdn.example.com/pancake.jpg";
+    const addPictureRes = await recipeConcept.addRecipePicture({
+      recipe: imageRecipeId,
+      pictureUrl: imageUrl,
+    });
+    assert(!addPictureRes.error, "Should append picture");
+
+    const updatedRecipe = await collection.findOne({ _id: imageRecipeId });
+    assertEquals(updatedRecipe?.pictures, [imageUrl]);
+
+    console.log("[4.2] Attempting to add a picture to a non-existent recipe...");
+    const missingRes = await recipeConcept.addRecipePicture({
+      recipe: "missing" as ID,
+      pictureUrl: imageUrl,
+    });
+    assertEquals(missingRes.error, "Recipe does not exist");
+  });
+
   await client.close();
 });

@@ -3,6 +3,7 @@ import { cors } from "jsr:@hono/hono/cors";
 import { Collection, Db } from "npm:mongodb";
 import { freshID } from "@utils/database.ts";
 import { ID } from "@utils/types.ts";
+import { getRecipeImageLimits, uploadRecipeImage } from "@utils/cloudinary.ts";
 import { exclusions, inclusions } from "./passthrough.ts";
 import "jsr:@std/dotenv/load";
 
@@ -191,7 +192,81 @@ export function startRequestingServer(
   if (!(Requesting instanceof RequestingConcept)) {
     throw new Error("Requesting concept missing or broken.");
   }
+  const Recipe = instances["Recipe"];
+  if (!Recipe) {
+    throw new Error("Recipe concept instance missing for upload endpoint.");
+  }
   const app = new Hono();
+
+  const uploadLimits = getRecipeImageLimits();
+  const uploadRoute = `${REQUESTING_BASE_URL}/uploads/recipe-image`;
+  app.post(uploadRoute, async (c) => {
+    const contentType = c.req.header("content-type") ?? "";
+    if (!contentType.includes("multipart/form-data")) {
+      return c.json(
+        { error: "Content-Type must be multipart/form-data" },
+        400,
+      );
+    }
+
+    try {
+      const formData = await c.req.raw.formData();
+      const recipe = formData.get("recipe");
+      const user = formData.get("user");
+      const file = formData.get("file");
+
+      if (typeof recipe !== "string" || recipe.trim().length === 0) {
+        return c.json({ error: "Missing recipe id" }, 400);
+      }
+
+      if (!(file instanceof File)) {
+        return c.json({ error: "Image file field (file) is required" }, 400);
+      }
+
+      if (file.size === 0) {
+        return c.json({ error: "Image file is empty" }, 400);
+      }
+
+      if (file.size > uploadLimits.maxBytes) {
+        return c.json(
+          {
+            error: `Image must be <= ${uploadLimits.maxBytes} bytes`,
+            maxBytes: uploadLimits.maxBytes,
+          },
+          413,
+        );
+      }
+
+      const tags = [
+        "concept:Recipe",
+        `recipe:${recipe}`,
+        ...(typeof user === "string" && user ? [`user:${user}`] : []),
+      ];
+      const uploadResult = await uploadRecipeImage(file, { tags });
+
+      const persisted = await Recipe.addRecipePicture({
+        recipe,
+        pictureUrl: uploadResult.secureUrl,
+      });
+
+      if (persisted.error) {
+        return c.json({ error: persisted.error }, 404);
+      }
+
+      return c.json({
+        recipe,
+        image: uploadResult,
+        limits: uploadLimits,
+      });
+    } catch (error) {
+      console.error("[Recipe Upload] Failed to process request", error);
+      return c.json(
+        { error: "Failed to upload recipe image. Please try again." },
+        500,
+      );
+    }
+  });
+
   app.use(
     "/*",
     cors({

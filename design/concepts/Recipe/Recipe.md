@@ -26,3 +26,29 @@
   - deleteAllRecipesForDish(dish: Dish)
     - requires: True
     - effect: deletes all recipes associated with the given dish
+  - addRecipePicture(recipe: Recipe, pictureUrl: Path):(recipe: Recipe)
+    - requires: recipe exists
+    - effect: appends a new picture URL to the recipe's `pictures` list
+
+### Recipe image upload workflow
+
+- Endpoint: `POST ${REQUESTING_BASE_URL}/uploads/recipe-image` (defaults to `/api/uploads/recipe-image`).
+- Request: `multipart/form-data` with fields:
+  - `recipe` (string, required): recipe identifier.
+  - `user` (string, optional): used for tagging Cloudinary uploads.
+  - `file` (file, required): image in JPG, PNG, WEBP, or GIF. Max size defaults to 5 MB and can be overridden via `MAX_RECIPE_IMAGE_BYTES`.
+- Behavior:
+  1. Backend validates the form payload.
+  2. The raw image is streamed to Cloudinary using the credentials (`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`) and optional folder override (`CLOUDINARY_RECIPE_FOLDER`).
+  3. On success, `Recipe.addRecipePicture` is called with the Cloudinary `secure_url`, ensuring the recipe state is updated atomically.
+  4. Response payload contains `{ recipe, image, limits }`, where `image.secureUrl` is what the frontend should display and persist locally.
+
+Example curl:
+
+```
+curl -X POST http://localhost:10000/api/uploads/recipe-image \
+  -H "Authorization: Bearer <token>" \
+  -F "recipe=<recipe-id>" \
+  -F "user=<user-id>" \
+  -F "file=@/path/to/pancake.jpg"
+```

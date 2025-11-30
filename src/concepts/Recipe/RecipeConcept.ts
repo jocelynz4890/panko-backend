@@ -161,6 +161,32 @@ export default class RecipeConcept {
   }
 
   /**
+   * addRecipePicture(recipe: Recipe, pictureUrl: Path):(recipe: Recipe)
+   *
+   * **requires** recipe exists
+   *
+   * **effects** appends a picture URL to the recipe
+   */
+  async addRecipePicture(
+    { recipe, pictureUrl }: { recipe: Recipe; pictureUrl: FilePath },
+  ): Promise<{ recipe?: Recipe; error?: string }> {
+    if (!pictureUrl) {
+      return { error: "Picture URL is required" };
+    }
+
+    const result = await this.recipes.updateOne(
+      { _id: recipe },
+      { $push: { pictures: pictureUrl } },
+    );
+
+    if (result.matchedCount === 0) {
+      return { error: "Recipe does not exist" };
+    }
+
+    return { recipe };
+  }
+
+  /**
    * deleteRecipe(recipe: Recipe):(recipe: Recipe)
    *
    * **requires** recipe exists
