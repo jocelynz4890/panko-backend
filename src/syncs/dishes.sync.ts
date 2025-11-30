@@ -155,7 +155,15 @@ export const SetDefaultRecipeRequest: Sync = ({ request, token, user, recipe, di
   then: actions([Dishes.setDefaultRecipe, { recipe, dish }]),
 });
 
-export const SetDefaultRecipeResponse: Sync = ({ request, error }) => ({
+export const SetDefaultRecipeResponse: Sync = ({ request, dish }) => ({
+  when: actions(
+    [Requesting.request, { path: "/Dishes/setDefaultRecipe" }, { request }],
+    [Dishes.setDefaultRecipe, {}, { dish }],
+  ),
+  then: actions([Requesting.respond, { request, dish }]),
+});
+
+export const SetDefaultRecipeErrorResponse: Sync = ({ request, error }) => ({
   when: actions(
     [Requesting.request, { path: "/Dishes/setDefaultRecipe" }, { request }],
     [Dishes.setDefaultRecipe, {}, { error }],
