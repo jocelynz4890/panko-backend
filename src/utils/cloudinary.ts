@@ -1,5 +1,9 @@
-import { v2 as cloudinary, type UploadApiResponse } from "npm:cloudinary@1.41.0";
+import {
+  type UploadApiResponse,
+  v2 as cloudinary,
+} from "npm:cloudinary@1.41.0";
 import { Buffer } from "node:buffer";
+import { Readable } from "node:stream";
 import "jsr:@std/dotenv/load";
 
 type Uploadable = File | Blob | ArrayBuffer | Uint8Array;
@@ -10,8 +14,9 @@ const REQUIRED_VARS = [
   "CLOUDINARY_API_SECRET",
 ] as const;
 
-const MAX_RECIPE_IMAGE_BYTES =
-  Number(Deno.env.get("MAX_RECIPE_IMAGE_BYTES") ?? 5_000_000);
+const MAX_RECIPE_IMAGE_BYTES = Number(
+  Deno.env.get("MAX_RECIPE_IMAGE_BYTES") ?? 5_000_000,
+);
 const DEFAULT_FOLDER = Deno.env.get("CLOUDINARY_RECIPE_FOLDER") ??
   "panko/recipes";
 
@@ -64,38 +69,60 @@ function isBlob(value: Uploadable): value is Blob {
   return typeof Blob !== "undefined" && value instanceof Blob;
 }
 
-async function toBuffer(
+function toNodeReadable(stream: ReadableStream<Uint8Array>): Readable {
+  if (typeof Readable.fromWeb === "function") {
+    return Readable.fromWeb(stream);
+  }
+
+  // Fallback for environments missing Readable.fromWeb
+  const iterator = (async function* () {
+    const reader = stream.getReader();
+    try {
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        if (value) yield value;
+      }
+    } finally {
+      reader.releaseLock();
+    }
+  })();
+
+  return Readable.from(iterator);
+}
+
+async function toReadable(
   input: Uploadable,
-): Promise<{ buffer: Buffer; bytes: number; mimeType?: string }> {
+): Promise<{ readable: Readable; bytes: number; mimeType?: string }> {
   if (isFile(input)) {
-    const arrayBuffer = await input.arrayBuffer();
     return {
-      buffer: Buffer.from(arrayBuffer),
+      readable: toNodeReadable(input.stream()),
       bytes: input.size,
       mimeType: input.type || undefined,
     };
   }
 
   if (isBlob(input)) {
-    const arrayBuffer = await input.arrayBuffer();
     return {
-      buffer: Buffer.from(arrayBuffer),
+      readable: toNodeReadable(input.stream()),
       bytes: input.size,
       mimeType: input.type || undefined,
     };
   }
 
   if (input instanceof Uint8Array) {
+    const buffer = Buffer.from(input);
     return {
-      buffer: Buffer.from(input),
-      bytes: input.byteLength,
+      readable: Readable.from([buffer]),
+      bytes: buffer.byteLength,
     };
   }
 
   if (input instanceof ArrayBuffer) {
+    const buffer = Buffer.from(input);
     return {
-      buffer: Buffer.from(input),
-      bytes: input.byteLength,
+      readable: Readable.from([buffer]),
+      bytes: buffer.byteLength,
     };
   }
 
@@ -108,11 +135,6 @@ function validateSize(bytes: number): void {
       `Recipe image exceeds ${MAX_RECIPE_IMAGE_BYTES} byte limit.`,
     );
   }
-}
-
-function toDataUri(buffer: Buffer, mimeType = "application/octet-stream") {
-  const base64 = buffer.toString("base64");
-  return `data:${mimeType};base64,${base64}`;
 }
 
 function mapResponse(response: UploadApiResponse): RecipeImageUploadResult {
@@ -134,16 +156,35 @@ export async function uploadRecipeImage(
 ): Promise<RecipeImageUploadResult> {
   ensureConfigured();
 
-  const { buffer, bytes, mimeType } = await toBuffer(input);
+  const { readable, bytes, mimeType } = await toReadable(input);
   validateSize(bytes);
 
-  const uploadResult = await cloudinary.uploader.upload(
-    toDataUri(buffer, options.mimeType ?? mimeType ?? "image/jpeg"),
-    {
-      folder: options.folder ?? DEFAULT_FOLDER,
-      public_id: options.publicId,
-      tags: options.tags,
-      resource_type: "image",
+  const uploadOptions = {
+    folder: options.folder ?? DEFAULT_FOLDER,
+    public_id: options.publicId,
+    tags: options.tags,
+    resource_type: "image",
+    content_type: options.mimeType ?? mimeType ?? "image/jpeg",
+  };
+
+  const uploadResult = await new Promise<UploadApiResponse>(
+    (resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        uploadOptions,
+        (error, result) => {
+          if (error || !result) {
+            reject(
+              error ?? new Error("Cloudinary upload failed without a result."),
+            );
+            return;
+          }
+          resolve(result);
+        },
+      );
+
+      readable.on("error", reject);
+      uploadStream.on("error", reject);
+      readable.pipe(uploadStream);
     },
   );
 
@@ -157,4 +198,3 @@ export function getRecipeImageLimits() {
     allowedFormats: ["jpg", "jpeg", "png", "webp", "gif"],
   };
 }
-
