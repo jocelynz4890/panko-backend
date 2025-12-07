@@ -1,5 +1,5 @@
 import { actions, Sync, Frames } from "@engine";
-import { Recipe, Requesting, Authentication, Dishes } from "@concepts";
+import { Recipe, Requesting, Authentication, Dishes, Calendar } from "@concepts";
 
 // Create recipe - requires authentication
 export const CreateRecipeRequest: Sync = ({ request, token, user, ingredientsList, subname, pictures, date, instructions, note, ranking, dish }) => ({
@@ -120,6 +120,14 @@ export const RemoveRecipeFromDishOnDelete: Sync = ({ recipe, dish }) => ({
     return frames.filter(($) => $[dish] !== undefined);
   },
   then: actions([Dishes.removeRecipe, { recipe, dish }]),
+});
+
+// When a recipe is deleted, remove all scheduled recipes associated with it from the calendar
+export const RemoveScheduledRecipesOnRecipeDelete: Sync = ({ recipe }) => ({
+  when: actions(
+    [Recipe.deleteRecipe, {}, { recipe }],
+  ),
+  then: actions([Calendar.deleteAllScheduledRecipesWithRecipe, { recipe }]),
 });
 
 // Delete all recipes for dish - requires authentication
