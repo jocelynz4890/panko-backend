@@ -14,13 +14,13 @@ Sunday, December 7
 - fixed image uploading
 - made tasks list
 - prepopulated data
+- conducted user testing
 
 ## Design changes
 
 None
 
 ## Issues
-
 
 ### list of problems and issues to address
 [ISSUE] Uploading images on deployed gives a network error
