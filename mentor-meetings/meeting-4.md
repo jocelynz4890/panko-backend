@@ -24,7 +24,9 @@ None
 
 ### list of problems and issues to address
 [ISSUE] Uploading images takes quite a bit of time.
+
 ## Plans and Decisions
 
 Decisions made:
 - decided on a task list
+- add loading indicator when uploading images.
