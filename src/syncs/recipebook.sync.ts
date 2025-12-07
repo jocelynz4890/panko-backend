@@ -129,7 +129,15 @@ export const DeleteRecipeBookWithAuth: Sync = ({ request, user, book }) => ({
   then: actions([RecipeBook.deleteRecipeBook, { book }]),
 });
 
-export const DeleteRecipeBookResponse: Sync = ({ request, error }) => ({
+export const DeleteRecipeBookSuccessResponse: Sync = ({ request }) => ({
+  when: actions(
+    [Requesting.request, { path: "/RecipeBook/deleteRecipeBook" }, { request }],
+    [RecipeBook.deleteRecipeBook, {}, {}],
+  ),
+  then: actions([Requesting.respond, { request, success: true }]),
+});
+
+export const DeleteRecipeBookErrorResponse: Sync = ({ request, error }) => ({
   when: actions(
     [Requesting.request, { path: "/RecipeBook/deleteRecipeBook" }, { request }],
     [RecipeBook.deleteRecipeBook, {}, { error }],
