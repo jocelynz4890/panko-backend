@@ -22,7 +22,12 @@ RUN deno task build
 
 # Cache the main module and all its dependencies.
 # This ensures faster startup times for the container as modules are pre-compiled.
-RUN deno cache src/main.ts
+# Also cache bcrypt module and its worker explicitly to ensure worker.ts is available
+# when running with --cached-only in production (Render may add this flag automatically)
+RUN deno cache src/main.ts && \
+    deno cache src/concepts/Authentication/AuthenticationConcept.ts && \
+    deno cache https://deno.land/x/bcrypt@v0.4.1/mod.ts && \
+    deno cache https://deno.land/x/bcrypt@v0.4.1/src/worker.ts
 
 # Specify the command to run when the container starts.
 # Using 'deno task start' is the best practice here, as it encapsulates
