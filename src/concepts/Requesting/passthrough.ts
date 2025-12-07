@@ -46,6 +46,10 @@ export const exclusions: Array<string> = [
   "/api/Authentication/createSession",
   "/api/Authentication/validateSession",
   "/api/Authentication/invalidateSession",
+  "/api/Authentication/_getUserByUsername",
+  "/api/Authentication/_getUsernameById",
+  "/api/Authentication/_getAllUsers",
+  "/api/Authentication/_getUserBySession",
 
   // Dishes endpoints - go through syncs with authentication
   "/api/Dishes/createDish",
@@ -63,6 +67,7 @@ export const exclusions: Array<string> = [
   "/api/Recipe/deleteRecipe",
   "/api/Recipe/deleteAllRecipesForDish",
   "/api/Recipe/_getRecipes",
+  "/api/Recipe/_getRecipe",
 
   // RecipeBook endpoints - go through syncs with authentication
   "/api/RecipeBook/createRecipeBook",
