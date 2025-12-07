@@ -23,7 +23,7 @@ None
 ## Issues
 
 ### list of problems and issues to address
-[ISSUE] Uploading images on deployed gives a network error
+[ISSUE] Uploading images takes quite a bit of time.
 ## Plans and Decisions
 
 Decisions made:
