@@ -2,7 +2,7 @@
 ## Participant 1
 Participant #1, who lives in a cook-for-yourself dorm and regularly cooks and bakes for themselves, was able to pick up the core structure of the app fairly quickly. Even when they hesitated, they tended to resolve their confusion on their own after brief exploration. Overall, navigating between recipe books, dishes, and individual recipes felt intuitive to them, and they completed most tasks efficiently once they understood how the system was structured.
 
-One interesting moment came from their initial confusion about the distinction between “Dishes” and “Recipes.” Because they’re used to traditional recipe apps—where everything exists as a flat list of standalone recipes—the idea of a dish having multiple recipe variations was unfamiliar. However, their confusion quickly cleared up once they interacted more with the interface.
+One interesting moment came from their initial confusion about the distinction between “Dishes” and “Recipes.” Because they’re used to traditional recipe books where each recipe book contains a bunch of individual recipes, the idea of a dish having multiple recipe variations was unfamiliar. However, their confusion quickly cleared up once they interacted more with the interface.
 
 A similar issue arose during recipe editing. The user wasn’t immediately sure whether they were editing the dish name or the recipe name. They eventually noticed that the larger top field corresponded to the dish and the smaller lower field to the specific recipe variation.
 
