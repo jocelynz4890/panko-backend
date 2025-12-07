@@ -1,5 +1,5 @@
 import { actions, Sync, Frames } from "@engine";
-import { Recipe, Requesting, Authentication } from "@concepts";
+import { Recipe, Requesting, Authentication, Dishes } from "@concepts";
 
 // Create recipe - requires authentication
 export const CreateRecipeRequest: Sync = ({ request, token, user, ingredientsList, subname, pictures, date, instructions, note, ranking, dish }) => ({
@@ -92,6 +92,27 @@ export const DeleteRecipeErrorResponse: Sync = ({ request, error }) => ({
     [Recipe.deleteRecipe, {}, { error }],
   ),
   then: actions([Requesting.respond, { request, error }]),
+});
+
+// When a recipe is deleted, remove it from its dish's recipes array
+export const RemoveRecipeFromDishOnDelete: Sync = ({ recipe, dish }) => ({
+  when: actions(
+    [Recipe.deleteRecipe, {}, { recipe }],
+  ),
+  where: async (frames) => {
+    // Query the Recipe concept to get the dish associated with this recipe
+    const wrappedQuery = async (input: { recipe: string }) => {
+      const recipeDocs = await Recipe._getRecipe({ recipe: input.recipe });
+      if (recipeDocs.length > 0) {
+        return [{ dish: recipeDocs[0].dish }];
+      }
+      return [];
+    };
+    
+    frames = await frames.query(wrappedQuery, { recipe }, { dish });
+    return frames.filter(($) => $[dish] !== undefined);
+  },
+  then: actions([Dishes.removeRecipe, { recipe, dish }]),
 });
 
 // Delete all recipes for dish - requires authentication

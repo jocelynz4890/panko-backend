@@ -231,4 +231,18 @@ export default class RecipeConcept {
   ): Promise<RecipesDoc[]> {
     return await this.recipes.find({ dish }).toArray();
   }
+
+  /**
+   * _getRecipe (recipe: Recipe): (recipe: RecipesDoc)
+   *
+   * **requires** True
+   *
+   * **effects** returns the recipe document if it exists
+   */
+  async _getRecipe(
+    { recipe }: { recipe: Recipe },
+  ): Promise<RecipesDoc[]> {
+    const doc = await this.recipes.findOne({ _id: recipe });
+    return doc ? [doc] : [];
+  }
 }
