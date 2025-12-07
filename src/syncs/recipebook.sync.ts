@@ -49,7 +49,15 @@ export const EditRecipeBookNameWithAuth: Sync = ({ request, user, book, newName 
   then: actions([RecipeBook.editRecipeBookName, { book, newName }]),
 });
 
-export const EditRecipeBookNameResponse: Sync = ({ request, error }) => ({
+export const EditRecipeBookNameSuccessResponse: Sync = ({ request }) => ({
+  when: actions(
+    [Requesting.request, { path: "/RecipeBook/editRecipeBookName" }, { request }],
+    [RecipeBook.editRecipeBookName, {}, {}],
+  ),
+  then: actions([Requesting.respond, { request, success: true }]),
+});
+
+export const EditRecipeBookNameErrorResponse: Sync = ({ request, error }) => ({
   when: actions(
     [Requesting.request, { path: "/RecipeBook/editRecipeBookName" }, { request }],
     [RecipeBook.editRecipeBookName, {}, { error }],
