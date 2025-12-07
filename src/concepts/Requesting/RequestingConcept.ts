@@ -198,6 +198,16 @@ export function startRequestingServer(
   }
   const app = new Hono();
 
+  app.use(
+    "/*",
+    cors({
+      origin: REQUESTING_ALLOWED_DOMAIN,
+      allowHeaders: ["Content-Type", "Authorization"],
+      allowMethods: ["GET", "POST", "OPTIONS"],
+      credentials: true,
+    }),
+  );
+
   const uploadLimits = getRecipeImageLimits();
   const uploadRoute = `${REQUESTING_BASE_URL}/uploads/recipe-image`;
   app.post(uploadRoute, async (c) => {
@@ -267,19 +277,12 @@ export function startRequestingServer(
     }
   });
 
-  app.use(
-    "/*",
-    cors({
-      origin: REQUESTING_ALLOWED_DOMAIN,
-    }),
-  );
-
   // Health check and root route
   app.get("/", (c) => {
-    return c.json({ 
-      status: "ok", 
+    return c.json({
+      status: "ok",
       message: "Panko backend server is running",
-      baseUrl: REQUESTING_BASE_URL 
+      baseUrl: REQUESTING_BASE_URL,
     });
   });
 
