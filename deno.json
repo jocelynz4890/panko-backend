@@ -10,7 +10,7 @@
     "tasks": {
         "cache": "deno cache --reload src/main.ts && deno cache --reload src/concepts/Authentication/AuthenticationConcept.ts && deno cache --reload https://deno.land/x/bcrypt@v0.4.1/mod.ts && deno cache --reload https://deno.land/x/bcrypt@v0.4.1/src/worker.ts && deno cache --reload https://deno.land/x/bcrypt@v0.4.1/src/bcrypt/bcrypt.ts && deno cache --reload https://deno.land/x/bcrypt@v0.4.1/src/bcrypt/base64.ts",
         "cache-quick": "deno cache src/main.ts && deno cache src/concepts/Authentication/AuthenticationConcept.ts && deno cache https://deno.land/x/bcrypt@v0.4.1/mod.ts && deno cache https://deno.land/x/bcrypt@v0.4.1/src/worker.ts && deno cache https://deno.land/x/bcrypt@v0.4.1/src/bcrypt/bcrypt.ts && deno cache https://deno.land/x/bcrypt@v0.4.1/src/bcrypt/base64.ts",
-        "start": "deno task cache-quick && deno run --allow-net --allow-write --allow-read --allow-sys --allow-env src/main.ts",
+        "start": "deno run --allow-net --allow-write --allow-read --allow-sys --allow-env src/main.ts",
         "import": "deno run --allow-read --allow-write --allow-env src/utils/generate_imports.ts",
         "build": "deno run import"
     },
