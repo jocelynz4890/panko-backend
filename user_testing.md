@@ -15,12 +15,14 @@ The user really liked the overall aesthetic of the app and said the website felt
 ### Opportunities for Improvements
 
 - Issue: Users are confused about the difference between a Dish and a Recipe
-= Why: The concept of recibe books containing multiple variations of the same recipe is unfamilar to most cooks.
+- Why: The concept of recibe books containing multiple variations of the same recipe is unfamilar to most cooks.
 - Solution: Differentiate the "Dish Name" and "Recipe Name" fields more strongly through visually or with clearer , more intuitive names (eg. Dish vs Recipe Attempt Name)
+
 
 - Issue: users expect to be able to schedule a recipe from the recipe's page.
 - Why: intuitively, after creating a recipe, the user wants to be able to immediately assign that recipe rather than navigating to the calendar page.
 - Solution: Add a "Schedule This Recipe" button to the recipe page. This action could open a calendar popup to let the user select a date to schedule the recipe.
+
 
 - Issue: Users have trouble locating a recipe in order to schedule it on the calendar
 - Why: Currently, the app lists all recipes in chronilogical order on the calendar page, making it hard to locate a specific recipe when there are many.
