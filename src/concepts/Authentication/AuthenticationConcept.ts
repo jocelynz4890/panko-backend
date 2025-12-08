@@ -63,22 +63,33 @@ export default class AuthenticationConcept {
     username: string;
     password: string; // Password is required for registration
   }): Promise<{ user: User; username: string } | { error: string }> {
-    const existingUser = await this.users.findOne({ username });
-    if (existingUser) {
-      return { error: `Username '${username}' already exists.` };
+    try {
+      const existingUser = await this.users.findOne({ username });
+      if (existingUser) {
+        return { error: `Username '${username}' already exists.` };
+      }
+
+      // Hash the password before storing it
+      let passwordHash: string;
+      try {
+        passwordHash = await hash(password);
+      } catch (error) {
+        console.error("[Authentication] Error hashing password:", error);
+        return { error: "Failed to process password. Please try again." };
+      }
+
+      const newUser: Users = {
+        _id: freshID(), // Using freshID for MongoDB ObjectId compatibility
+        username,
+        passwordHash,
+      };
+
+      await this.users.insertOne(newUser);
+      return { user: newUser._id, username }; // Return both ID and username
+    } catch (error) {
+      console.error("[Authentication] Error in register:", error);
+      return { error: "Registration failed. Please try again." };
     }
-
-    // Hash the password before storing it
-    const passwordHash = await hash(password);
-
-    const newUser: Users = {
-      _id: freshID(), // Using freshID for MongoDB ObjectId compatibility
-      username,
-      passwordHash,
-    };
-
-    await this.users.insertOne(newUser);
-    return { user: newUser._id, username }; // Return both ID and username
   }
 
   /**
@@ -98,19 +109,30 @@ export default class AuthenticationConcept {
     username: string;
     password: string; // Password is required for authentication
   }): Promise<{ user: User } | { error: string }> {
-    const user = await this.users.findOne({ username });
+    try {
+      const user = await this.users.findOne({ username });
 
-    if (!user) {
-      return { error: `User with username '${username}' not found.` };
-    }
+      if (!user) {
+        return { error: `User with username '${username}' not found.` };
+      }
 
-    // Compare the provided password with the stored hash
-    const isMatch = await compare(password, user.passwordHash);
+      // Compare the provided password with the stored hash
+      let isMatch: boolean;
+      try {
+        isMatch = await compare(password, user.passwordHash);
+      } catch (error) {
+        console.error("[Authentication] Error comparing password:", error);
+        return { error: "Failed to verify password. Please try again." };
+      }
 
-    if (isMatch) {
-      return { user: user._id }; // Return the string ID
-    } else {
-      return { error: "Invalid password." };
+      if (isMatch) {
+        return { user: user._id }; // Return the string ID
+      } else {
+        return { error: "Invalid password." };
+      }
+    } catch (error) {
+      console.error("[Authentication] Error in authenticate:", error);
+      return { error: "Authentication failed. Please try again." };
     }
   }
 

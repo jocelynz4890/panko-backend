@@ -1,5 +1,5 @@
 import { actions, Sync, Frames } from "@engine";
-import { Recipe, Requesting, Authentication, Dishes } from "@concepts";
+import { Recipe, Requesting, Authentication, Dishes, Calendar } from "@concepts";
 
 // Create recipe - requires authentication
 export const CreateRecipeRequest: Sync = ({ request, token, user, ingredientsList, subname, pictures, date, instructions, note, ranking, dish }) => ({
@@ -95,16 +95,23 @@ export const DeleteRecipeErrorResponse: Sync = ({ request, error }) => ({
 });
 
 // When a recipe is deleted, remove it from its dish's recipes array
+// We need to query the recipe BEFORE deletion to get its dish
 export const RemoveRecipeFromDishOnDelete: Sync = ({ recipe, dish }) => ({
   when: actions(
     [Recipe.deleteRecipe, {}, { recipe }],
   ),
   where: async (frames) => {
     // Query the Recipe concept to get the dish associated with this recipe
+    // This must happen BEFORE the recipe is deleted, so we query it first
     const wrappedQuery = async (input: { recipe: string }) => {
-      const recipeDocs = await Recipe._getRecipe({ recipe: input.recipe });
-      if (recipeDocs.length > 0) {
-        return [{ dish: recipeDocs[0].dish }];
+      try {
+        const recipeDocs = await Recipe._getRecipe({ recipe: input.recipe });
+        if (recipeDocs.length > 0 && recipeDocs[0].dish) {
+          return [{ dish: recipeDocs[0].dish }];
+        }
+      } catch (error) {
+        // If query fails, recipe might already be deleted - skip this sync
+        console.warn('Could not query recipe for dish removal:', error);
       }
       return [];
     };
@@ -113,6 +120,14 @@ export const RemoveRecipeFromDishOnDelete: Sync = ({ recipe, dish }) => ({
     return frames.filter(($) => $[dish] !== undefined);
   },
   then: actions([Dishes.removeRecipe, { recipe, dish }]),
+});
+
+// When a recipe is deleted, remove all scheduled recipes associated with it from the calendar
+export const RemoveScheduledRecipesOnRecipeDelete: Sync = ({ recipe }) => ({
+  when: actions(
+    [Recipe.deleteRecipe, {}, { recipe }],
+  ),
+  then: actions([Calendar.deleteAllScheduledRecipesWithRecipe, { recipe }]),
 });
 
 // Delete all recipes for dish - requires authentication
