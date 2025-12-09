@@ -5,6 +5,8 @@
 - [Alpha Checkpoint](alpha_checkpoint.md)
 - [Beta Checkpoint](beta_checkpoint.md)
 - [User Testing](user_testing.md)
+   - [Task List](task_list.md)
+- [Reflections](reflection.md)  
 # Context: LLM framework for Concept Design
 
 This repository contains the Context tool and a set of **design documents** that provide comprehensive context for generating and implementing applications using [**concept design**](design/background/concept-design-overview.md).
